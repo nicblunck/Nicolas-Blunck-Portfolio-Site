@@ -6,10 +6,6 @@ import WorkMasonry from "@/components/WorkMasonry";
 import FixedNavObserver from "@/components/FixedNavObserver";
 import CursorGlow from "@/components/CursorGlow";
 import ScrollArrowLottie from "@/components/ScrollArrowLottie";
-import { getClient } from "@/sanity/lib/client";
-import { casesQuery, clientLogosQuery, contactLinksQuery } from "@/sanity/queries";
-import { urlFor } from "@/sanity/lib/image";
-
 type CaseEntry = {
   _id: string;
   title: string;
@@ -26,7 +22,7 @@ type CaseEntry = {
   };
   coverMedia?: {
     coverType?: "image" | "video";
-    image?: unknown;
+    imageUrl?: string;
     videoUrl?: string;
     link?: string;
   };
@@ -42,12 +38,8 @@ type ContactLink = {
 type ClientLogoEntry = {
   _id: string;
   name: string;
-  logo?: {
-    asset?: {
-      url?: string;
-      mimeType?: string | null;
-    };
-  };
+  logoUrl?: string;
+  mimeType?: string | null;
 };
 
 export default async function Home() {
@@ -58,19 +50,65 @@ export default async function Home() {
     { label: "Styles", href: "/styles" },
     { label: "Components", href: "/components" },
   ];
-  const isDraft = process.env.SANITY_USE_DRAFTS !== "false";
-  const client = getClient(isDraft);
-  const [cases, contactLinks, clientLogos] = await Promise.all([
-    client.fetch<CaseEntry[]>(casesQuery),
-    client.fetch<ContactLink[]>(contactLinksQuery),
-    client.fetch<ClientLogoEntry[]>(clientLogosQuery),
-  ]);
+  const cases: CaseEntry[] = [
+    {
+      _id: "case-1",
+      title: "Hermes Atelier",
+      client: "Hermes",
+      aspect: "3-4",
+      role: "Brand & Product",
+      competencies: { artDirection: true, ui: true, ux: true },
+      coverMedia: {
+        coverType: "image",
+        imageUrl: "/svgs/window.svg",
+        link: "#",
+      },
+    },
+    {
+      _id: "case-2",
+      title: "Sundial Health",
+      client: "Sundial",
+      aspect: "1-1",
+      role: "Digital Experience",
+      competencies: { ui: true, ux: true, motion: true },
+      coverMedia: {
+        coverType: "image",
+        imageUrl: "/svgs/globe.svg",
+        link: "#",
+      },
+    },
+    {
+      _id: "case-3",
+      title: "Boreal Studios",
+      client: "Boreal",
+      aspect: "9-16",
+      role: "Campaign System",
+      competencies: { artDirection: true, branding: true },
+      coverMedia: {
+        coverType: "image",
+        imageUrl: "/svgs/file.svg",
+        link: "#",
+      },
+    },
+  ];
+
+  const contactLinks: ContactLink[] = [
+    { _id: "contact-1", label: "Email", url: "mailto:hello@earthling.co", emoji: "✉️" },
+    { _id: "contact-2", label: "Instagram", url: "https://instagram.com", emoji: "📸" },
+    { _id: "contact-3", label: "LinkedIn", url: "https://linkedin.com", emoji: "💼" },
+  ];
+
+  const clientLogos: ClientLogoEntry[] = [
+    { _id: "logo-1", name: "Client One", logoUrl: "/svgs/globe.svg", mimeType: "image/svg+xml" },
+    { _id: "logo-2", name: "Client Two", logoUrl: "/svgs/file.svg", mimeType: "image/svg+xml" },
+    { _id: "logo-3", name: "Client Three", logoUrl: "/svgs/window.svg", mimeType: "image/svg+xml" },
+  ];
 
   const marqueeLogos = clientLogos
     .map((logo) => ({
       alt: logo.name,
-      src: logo.logo?.asset?.url ?? "",
-      mimeType: logo.logo?.asset?.mimeType ?? null,
+      src: logo.logoUrl ?? "",
+      mimeType: logo.mimeType ?? null,
     }))
     .filter((logo) => Boolean(logo.src));
 
@@ -268,13 +306,8 @@ export default async function Home() {
                 };
 
                 const coverType = item.coverMedia?.coverType ?? "image";
-                const coverImage = item.coverMedia?.image;
                 const imageSrc =
-                  coverType === "image" && coverImage
-                    ? urlFor(coverImage, isDraft).width(1200).height(1200).url()
-                    : coverType === "link"
-                      ? item.coverMedia?.link
-                      : undefined;
+                  coverType === "image" ? item.coverMedia?.imageUrl : item.coverMedia?.link;
                 const videoSrc =
                   coverType === "video" ? item.coverMedia?.videoUrl : undefined;
 
