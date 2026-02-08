@@ -7,6 +7,7 @@ export function getClient(useDraft = false) {
     projectId,
     dataset,
     apiVersion,
+    apiHost: `https://${projectId}.api.sanity.io`,
     useCdn: !useDraft,
     token: useDraft ? process.env.SANITY_API_READ_TOKEN : undefined,
     perspective: useDraft ? 'previewDrafts' : 'published',
