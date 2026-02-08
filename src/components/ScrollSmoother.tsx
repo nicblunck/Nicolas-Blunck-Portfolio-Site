@@ -17,7 +17,6 @@ export default function ScrollSmoother() {
       duration: 1.6,
       lerp: 0.04,
       smoothWheel: true,
-      smoothTouch: false,
     });
 
     let rafId = 0;
