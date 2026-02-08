@@ -1,16 +1,22 @@
-import { createClient } from 'next-sanity'
+import { createClient } from "next-sanity";
 
-import { apiVersion, dataset, projectId } from '../env'
+import { apiVersion, dataset, hasSanityConfig, projectId } from "../env";
 
-export function getClient(useDraft = false) {
+type SanityClient = ReturnType<typeof createClient>;
+
+export function getClient(useDraft = false): SanityClient | null {
+  if (!hasSanityConfig) {
+    return null;
+  }
+
   return createClient({
     projectId,
     dataset,
     apiVersion,
     useCdn: !useDraft,
     token: useDraft ? process.env.SANITY_API_READ_TOKEN : undefined,
-    perspective: useDraft ? 'previewDrafts' : 'published',
-  })
+    perspective: useDraft ? "previewDrafts" : "published",
+  });
 }
 
-export const client = getClient(false)
+export const client = getClient(false);

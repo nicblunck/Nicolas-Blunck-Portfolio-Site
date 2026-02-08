@@ -58,10 +58,12 @@ export default async function Home() {
   ];
   const isDraft = process.env.SANITY_USE_DRAFTS !== "false";
   const client = getClient(isDraft);
-  const [cases, contactLinks] = await Promise.all([
-    client.fetch<CaseEntry[]>(casesQuery),
-    client.fetch<ContactLink[]>(contactLinksQuery),
-  ]);
+  const [cases, contactLinks] = client
+    ? await Promise.all([
+        client.fetch<CaseEntry[]>(casesQuery),
+        client.fetch<ContactLink[]>(contactLinksQuery),
+      ])
+    : [[], []];
 
   return (
     <div className="relative min-h-screen bg-[var(--semantic-bg-base)] text-[var(--semantic-text-primary)]">
