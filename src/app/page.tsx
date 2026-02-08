@@ -1,12 +1,3 @@
-const clientLogos = Array.from({ length: 8 }, (_, index) => {
-  const isBudgie = index % 2 === 0;
-  return {
-    alt: isBudgie ? "Budgie" : "Charm",
-    src: isBudgie
-      ? "/Budgie_Icon_v02-iOS-Default-1024x1024@1x.png"
-      : "/Charm%20Icon%20v01-iOS-Default-1024x1024@1x.png",
-  };
-});
 import NavBar from "@/components/NavBar";
 import TextButton from "@/components/TextButton";
 import ClientLogoMarquee from "@/components/ClientLogoMarquee";
@@ -16,7 +7,7 @@ import FixedNavObserver from "@/components/FixedNavObserver";
 import CursorGlow from "@/components/CursorGlow";
 import ScrollArrowLottie from "@/components/ScrollArrowLottie";
 import { getClient } from "@/sanity/lib/client";
-import { casesQuery, contactLinksQuery } from "@/sanity/queries";
+import { casesQuery, clientLogosQuery, contactLinksQuery } from "@/sanity/queries";
 import { urlFor } from "@/sanity/lib/image";
 
 type CaseEntry = {
@@ -48,6 +39,17 @@ type ContactLink = {
   emoji?: string;
 };
 
+type ClientLogoEntry = {
+  _id: string;
+  name: string;
+  logo?: {
+    asset?: {
+      url?: string;
+      mimeType?: string | null;
+    };
+  };
+};
+
 export default async function Home() {
   const navItems = [
     { label: "Work", href: "#" },
@@ -58,10 +60,19 @@ export default async function Home() {
   ];
   const isDraft = process.env.SANITY_USE_DRAFTS !== "false";
   const client = getClient(isDraft);
-  const [cases, contactLinks] = await Promise.all([
+  const [cases, contactLinks, clientLogos] = await Promise.all([
     client.fetch<CaseEntry[]>(casesQuery),
     client.fetch<ContactLink[]>(contactLinksQuery),
+    client.fetch<ClientLogoEntry[]>(clientLogosQuery),
   ]);
+
+  const marqueeLogos = clientLogos
+    .map((logo) => ({
+      alt: logo.name,
+      src: logo.logo?.asset?.url ?? "",
+      mimeType: logo.logo?.asset?.mimeType ?? null,
+    }))
+    .filter((logo) => Boolean(logo.src));
 
   return (
     <div className="relative min-h-screen bg-[var(--semantic-bg-base)] text-[var(--semantic-text-primary)]">
@@ -303,7 +314,7 @@ export default async function Home() {
             className="animate-fade-in relative left-1/2 mt-6 w-screen -translate-x-1/2"
             style={{ animationDelay: "1300ms" }}
           >
-            <ClientLogoMarquee logos={clientLogos} />
+            <ClientLogoMarquee logos={marqueeLogos} />
           </div>
         </section>
 

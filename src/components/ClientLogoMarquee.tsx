@@ -1,6 +1,7 @@
 type ClientLogo = {
   alt: string;
   src: string;
+  mimeType?: string | null;
 };
 
 type ClientLogoMarqueeProps = {
@@ -37,13 +38,32 @@ export default function ClientLogoMarquee({
               key={`${logo.alt}-${index}`}
               className="flex h-32 w-32 flex-none items-center justify-center overflow-hidden rounded-[8px] bg-white p-4 shadow-[0px_4px_12px_rgba(25,37,0,0.08)]"
             >
-              <img
-                src={logo.src}
-                alt={logo.alt}
-                className="h-full w-full object-contain"
-                draggable={false}
-                loading="lazy"
-              />
+              {logo.mimeType === "image/svg+xml" ? (
+                <span
+                  aria-label={logo.alt}
+                  role="img"
+                  className="block h-full w-full"
+                  style={{
+                    backgroundColor: "var(--semantic-text-secondary)",
+                    WebkitMaskImage: `url(${logo.src})`,
+                    WebkitMaskRepeat: "no-repeat",
+                    WebkitMaskPosition: "center",
+                    WebkitMaskSize: "contain",
+                    maskImage: `url(${logo.src})`,
+                    maskRepeat: "no-repeat",
+                    maskPosition: "center",
+                    maskSize: "contain",
+                  }}
+                />
+              ) : (
+                <img
+                  src={logo.src}
+                  alt={logo.alt}
+                  className="h-full w-full object-contain"
+                  draggable={false}
+                  loading="lazy"
+                />
+              )}
             </div>
           ))}
         </div>
@@ -55,13 +75,31 @@ export default function ClientLogoMarquee({
               key={`${logo.alt}-duplicate-${index}`}
               className="flex h-32 w-32 flex-none items-center justify-center overflow-hidden rounded-[8px] bg-white p-4 shadow-[0px_4px_12px_rgba(25,37,0,0.08)]"
             >
-              <img
-                src={logo.src}
-                alt=""
-                className="h-full w-full object-contain"
-                draggable={false}
-                loading="lazy"
-              />
+              {logo.mimeType === "image/svg+xml" ? (
+                <span
+                  aria-hidden="true"
+                  className="block h-full w-full"
+                  style={{
+                    backgroundColor: "var(--semantic-text-secondary)",
+                    WebkitMaskImage: `url(${logo.src})`,
+                    WebkitMaskRepeat: "no-repeat",
+                    WebkitMaskPosition: "center",
+                    WebkitMaskSize: "contain",
+                    maskImage: `url(${logo.src})`,
+                    maskRepeat: "no-repeat",
+                    maskPosition: "center",
+                    maskSize: "contain",
+                  }}
+                />
+              ) : (
+                <img
+                  src={logo.src}
+                  alt=""
+                  className="h-full w-full object-contain"
+                  draggable={false}
+                  loading="lazy"
+                />
+              )}
             </div>
           ))}
         </div>

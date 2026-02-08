@@ -9,6 +9,19 @@ export const contactLinksQuery = groq`
   }
 `;
 
+export const clientLogosQuery = groq`
+  *[_type == "clientLogo"]|order(order asc, name asc){
+    _id,
+    name,
+    logo{
+      asset->{
+        url,
+        mimeType
+      }
+    }
+  }
+`;
+
 export const casesQuery = groq`
   *[_type == "case" && featured == true]|order(order asc, publishedAt desc){
     _id,
