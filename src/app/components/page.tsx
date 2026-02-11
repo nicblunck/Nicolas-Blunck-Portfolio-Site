@@ -6,7 +6,11 @@ import NavButton from "@/components/NavButton";
 import TextButton from "@/components/TextButton";
 import Toggle from "@/components/Toggle";
 import WorkCard from "@/components/WorkCard";
+import WorkSection, { type WorkSectionCase } from "@/components/WorkSection";
 import CompetenceChip from "@/components/CompetenceChip";
+import ContactForm from "@/components/ContactForm";
+import ContactSection, { type ContactLink } from "@/components/ContactSection";
+import HomeFooter from "@/components/HomeFooter";
 
 export default function ComponentsPage() {
   const [workTitle, setWorkTitle] = useState("Project Title");
@@ -31,12 +35,53 @@ export default function ComponentsPage() {
     }, {});
   }, [chipState]);
 
+  const contactLinksPreview: ContactLink[] = [
+    { id: "behance", label: "Behance", url: "https://www.behance.net", emoji: "🧩" },
+    { id: "dribbble", label: "Dribbble", url: "https://dribbble.com", emoji: "🏀" },
+    { id: "linkedin", label: "LinkedIn", url: "https://www.linkedin.com", emoji: "💼" },
+  ];
+
   const chipPalette = useMemo(() => {
     return chipState.reduce<Record<string, string>>((acc, chip) => {
       acc[chip.key] = chip.color;
       return acc;
     }, {});
   }, [chipState]);
+
+  const workSectionCases: WorkSectionCase[] = [
+    {
+      _id: "work-section-1",
+      title: workTitle,
+      client: workClient,
+      aspect: workAspect,
+      competencies: chipState
+        .filter((chip) => chip.enabled)
+        .map((chip) => ({
+          _id: chip.key,
+          key: chip.key,
+          label: chip.label,
+          emoji: chip.emoji,
+          bg: chip.color,
+        })),
+      coverMedia: { coverType: "image", image: workImage },
+    },
+    {
+      _id: "work-section-2",
+      title: "Another Project",
+      client: "Another Client",
+      aspect: workAspect,
+      competencies: chipState
+        .filter((chip) => chip.enabled)
+        .map((chip) => ({
+          _id: `second-${chip.key}`,
+          key: chip.key,
+          label: chip.label,
+          emoji: chip.emoji,
+          bg: chip.color,
+        })),
+      coverMedia: { coverType: "image", image: workImage },
+    },
+  ];
 
   const handleChipUpdate = (index: number, next: Partial<(typeof chipState)[number]>) => {
     setChipState((prev) =>
@@ -99,6 +144,47 @@ export default function ComponentsPage() {
                 { label: "Styles", href: "/styles" },
                 { label: "Components", href: "/components" },
               ]}
+            />
+          </div>
+        </section>
+
+        <section className="rounded-xl border border-[#e2eccc] bg-white/60 p-8">
+          <div className="flex flex-col gap-6">
+            <div>
+              <p
+                className="text-xs uppercase"
+                style={{
+                  fontFamily: "var(--font-inter)",
+                  letterSpacing: "0.2em",
+                  color: "#334d23",
+                }}
+              >
+                Contact Form
+              </p>
+            </div>
+            <ContactForm idPrefix="components-contact" />
+          </div>
+        </section>
+
+        <section className="rounded-xl border border-[#e2eccc] bg-white/60 p-8">
+          <div className="flex flex-col gap-6">
+            <div>
+              <p
+                className="text-xs uppercase"
+                style={{
+                  fontFamily: "var(--font-inter)",
+                  letterSpacing: "0.2em",
+                  color: "#334d23",
+                }}
+              >
+                Contact Section
+              </p>
+            </div>
+            <ContactSection
+              title="Where you can find me 👀"
+              links={contactLinksPreview}
+              formProps={{ idPrefix: "components-contact-section" }}
+              className="mt-0"
             />
           </div>
         </section>
@@ -239,6 +325,31 @@ export default function ComponentsPage() {
                   color: "#334d23",
                 }}
               >
+                Work Section
+              </p>
+            </div>
+            <WorkSection
+              className="mt-0"
+              title="Some of my work 💼"
+              ctaLabel="All Work"
+              ctaUrl="#"
+              cases={workSectionCases}
+              animationDelayMs={0}
+            />
+          </div>
+        </section>
+
+        <section className="rounded-xl border border-[#e2eccc] bg-white/60 p-8">
+          <div className="flex flex-col gap-6">
+            <div>
+              <p
+                className="text-xs uppercase"
+                style={{
+                  fontFamily: "var(--font-inter)",
+                  letterSpacing: "0.2em",
+                  color: "#334d23",
+                }}
+              >
                 Competence Chip
               </p>
             </div>
@@ -314,6 +425,24 @@ export default function ComponentsPage() {
               <NavButton text="Lorem Ipsum" />
               <NavButton text="Lorem Ipsum" className="bg-[#e2eccc]" />
             </div>
+          </div>
+        </section>
+
+        <section className="rounded-xl border border-[#e2eccc] bg-white/60 p-8">
+          <div className="flex flex-col gap-6">
+            <div>
+              <p
+                className="text-xs uppercase"
+                style={{
+                  fontFamily: "var(--font-inter)",
+                  letterSpacing: "0.2em",
+                  color: "#334d23",
+                }}
+              >
+                Footer
+              </p>
+            </div>
+            <HomeFooter className="mt-0" />
           </div>
         </section>
       </div>

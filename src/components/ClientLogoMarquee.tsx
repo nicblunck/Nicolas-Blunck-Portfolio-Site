@@ -17,6 +17,8 @@ export default function ClientLogoMarquee({
   className,
 }: ClientLogoMarqueeProps) {
   const duration = `${durationSeconds}s`;
+  const repeatCount = Math.max(2, Math.ceil(12 / Math.max(logos.length, 1)));
+  const repeatedLogos = Array.from({ length: repeatCount }, () => logos).flat();
 
   return (
     <div className={`relative w-full overflow-hidden ${className ?? ""}`}>
@@ -32,11 +34,11 @@ export default function ClientLogoMarquee({
         style={{ animation: `client-logo-marquee ${duration} linear infinite` }}
       >
         <div className="flex gap-4 pr-4">
-          {logos.map((logo, index) => (
+          {repeatedLogos.map((logo, index) => (
             <div
               // eslint-disable-next-line react/no-array-index-key
               key={`${logo.alt}-${index}`}
-              className="flex h-32 w-32 flex-none items-center justify-center overflow-hidden rounded-[8px] bg-white p-4 shadow-[0px_4px_12px_rgba(25,37,0,0.08)]"
+              className="flex h-32 w-32 flex-none items-center justify-center overflow-hidden rounded-[8px] p-4"
             >
               {logo.mimeType === "image/svg+xml" ? (
                 <span
@@ -69,11 +71,11 @@ export default function ClientLogoMarquee({
         </div>
 
         <div className="flex gap-4 pr-4" aria-hidden="true">
-          {logos.map((logo, index) => (
+          {repeatedLogos.map((logo, index) => (
             <div
               // eslint-disable-next-line react/no-array-index-key
               key={`${logo.alt}-duplicate-${index}`}
-              className="flex h-32 w-32 flex-none items-center justify-center overflow-hidden rounded-[8px] bg-white p-4 shadow-[0px_4px_12px_rgba(25,37,0,0.08)]"
+              className="flex h-32 w-32 flex-none items-center justify-center overflow-hidden rounded-[8px] p-4"
             >
               {logo.mimeType === "image/svg+xml" ? (
                 <span

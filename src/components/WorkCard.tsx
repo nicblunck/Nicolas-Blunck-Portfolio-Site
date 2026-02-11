@@ -7,6 +7,7 @@ type WorkCardProps = {
   state?: "default" | "hover";
   imageSrc?: string;
   videoSrc?: string;
+  tags?: Array<{ key: TagKey; label: string; emoji: string; bgColor: string }>;
   enabledTags?: Partial<Record<TagKey, boolean>>;
   chipPalette?: Partial<Record<TagKey, string>>;
   className?: string;
@@ -22,9 +23,9 @@ const aspectClassMap: Record<WorkCardProps["aspect"], string> = {
   "3-2": "aspect-[3/2]",
 };
 
-type TagKey = "art-direction" | "ui" | "ux" | "motion" | "illustration" | "branding";
+type TagKey = string;
 
-const tags: Array<{ key: TagKey; label: string; emoji: string; bgColor: string }> = [
+const defaultTags: Array<{ key: TagKey; label: string; emoji: string; bgColor: string }> = [
   { key: "art-direction", label: "Art Direction", emoji: "🎨", bgColor: "#d8e2b8" },
   { key: "ui", label: "UI", emoji: "📱", bgColor: "#ffd4c7" },
   { key: "ux", label: "UX", emoji: "🧭", bgColor: "#cbebff" },
@@ -40,15 +41,17 @@ export default function WorkCard({
   state = "default",
   imageSrc = defaultImage,
   videoSrc,
+  tags,
   enabledTags,
   chipPalette,
   className,
 }: WorkCardProps) {
   const isControlled = state !== "default";
   const isHovered = state === "hover";
+  const allTags = tags ?? defaultTags;
   const visibleTags = enabledTags
-    ? tags.filter((tag) => enabledTags[tag.key] !== false)
-    : tags;
+    ? allTags.filter((tag) => enabledTags[tag.key] === true)
+    : allTags;
 
   return (
     <article
@@ -59,7 +62,7 @@ export default function WorkCard({
     >
       {!videoSrc && imageSrc ? (
         <img
-          className="absolute inset-0 h-full w-full object-cover"
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover"
           src={imageSrc}
           alt=""
           aria-hidden="true"
@@ -67,12 +70,13 @@ export default function WorkCard({
       ) : null}
       {videoSrc ? (
         <video
-          className="absolute inset-0 h-full w-full object-cover"
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover"
           src={videoSrc}
           muted
           autoPlay
           loop
           playsInline
+          aria-hidden="true"
           style={{ objectFit: "cover", objectPosition: "center" }}
         />
       ) : null}

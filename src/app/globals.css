@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source "../**/*.{ts,tsx,js,jsx,mdx}";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -413,7 +414,7 @@ body {
   height: 1024px;
   border-radius: 9999px;
   pointer-events: none;
-  z-index: 0;
+  z-index: -1;
   opacity: 0.9;
   transform: translate3d(-50%, -50%, 0);
   background: radial-gradient(
