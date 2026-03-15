@@ -1,5 +1,5 @@
 .pageWrap {
-  padding-bottom: 128px;
+  padding-bottom: calc(128px + 96px + var(--safe-area-bottom));
 }
 
 .landingContainer {
@@ -326,7 +326,7 @@
 .caseNav {
   position: fixed;
   left: 50%;
-  bottom: 32px;
+  bottom: calc(32px + var(--safe-area-bottom));
   transform: translateX(-50%);
   z-index: 20;
 }
@@ -411,7 +411,4 @@
     padding: 0 32px;
   }
 
-  .caseNav {
-    bottom: calc(32px + env(safe-area-inset-bottom));
-  }
 }

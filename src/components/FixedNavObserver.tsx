@@ -40,13 +40,14 @@ export default function FixedNavObserver({
 
   return (
     <div
-      className={`pointer-events-none fixed bottom-8 left-0 right-0 flex justify-center px-4 ${
+      className={`pointer-events-none fixed left-0 right-0 flex justify-center px-4 ${
         alwaysVisible
           ? "translate-y-0 opacity-100"
           : isVisible
             ? "translate-y-0 opacity-100 transition-all duration-300 ease-out"
             : "translate-y-10 opacity-0 transition-all duration-300 ease-out"
       }`}
+      style={{ bottom: "calc(32px + var(--safe-area-bottom))" }}
     >
       <div className="pointer-events-auto w-full lg:w-fit">
         <NavBar items={items} />

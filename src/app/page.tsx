@@ -211,7 +211,7 @@ export default async function Home() {
         className="mx-auto flex w-full max-w-[1440px] flex-col items-center px-8"
         style={{
           paddingTop: "calc(64px + 36px)",
-          paddingBottom: "128px",
+          paddingBottom: "calc(128px + 96px + var(--safe-area-bottom))",
         }}
       >
 
