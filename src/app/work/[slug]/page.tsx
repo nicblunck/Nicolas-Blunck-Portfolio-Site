@@ -92,6 +92,7 @@ export default async function CasePage({ params }: PageProps) {
   const [caseEntry, contactLinks] = await Promise.all([
     client
       .fetch<{
+        _id?: string;
         title?: string;
         client?: string;
         intro?: string;

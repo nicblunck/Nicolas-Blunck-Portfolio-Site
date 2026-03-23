@@ -1,5 +1,9 @@
 import { defineField, defineType } from "sanity";
 
+type MediaParent = {
+  mediaType?: "image" | "video";
+};
+
 export const caseMedia = defineType({
   name: "caseMedia",
   title: "Case Media",
@@ -29,10 +33,11 @@ export const caseMedia = defineType({
       title: "Image",
       type: "image",
       options: { hotspot: true },
-      hidden: ({ parent }) => parent?.mediaType !== "image",
+      hidden: ({ parent }) => (parent as MediaParent | undefined)?.mediaType !== "image",
       validation: (Rule) =>
         Rule.custom((value, context) => {
-          if (context.parent?.mediaType === "image" && !value) {
+          const parent = context.parent as MediaParent | undefined;
+          if (parent?.mediaType === "image" && !value) {
             return "Image is required.";
           }
           return true;
@@ -42,10 +47,11 @@ export const caseMedia = defineType({
       name: "video",
       title: "Video",
       type: "file",
-      hidden: ({ parent }) => parent?.mediaType !== "video",
+      hidden: ({ parent }) => (parent as MediaParent | undefined)?.mediaType !== "video",
       validation: (Rule) =>
         Rule.custom((value, context) => {
-          if (context.parent?.mediaType === "video" && !value) {
+          const parent = context.parent as MediaParent | undefined;
+          if (parent?.mediaType === "video" && !value) {
             return "Video file is required.";
           }
           return true;
@@ -55,10 +61,11 @@ export const caseMedia = defineType({
       name: "alt",
       title: "Alt Text",
       type: "string",
-      hidden: ({ parent }) => parent?.mediaType !== "image",
+      hidden: ({ parent }) => (parent as MediaParent | undefined)?.mediaType !== "image",
       validation: (Rule) =>
         Rule.custom((value, context) => {
-          if (context.parent?.mediaType === "image" && !value) {
+          const parent = context.parent as MediaParent | undefined;
+          if (parent?.mediaType === "image" && !value) {
             return "Alt text is required.";
           }
           return true;

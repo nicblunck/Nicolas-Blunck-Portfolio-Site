@@ -21,6 +21,10 @@ export default function FixedNavObserver({
       setIsVisible(true);
       return;
     }
+    if (!observeId) {
+      setIsVisible(true);
+      return;
+    }
     const target = document.getElementById(observeId);
     if (!target) {
       setIsVisible(true);
