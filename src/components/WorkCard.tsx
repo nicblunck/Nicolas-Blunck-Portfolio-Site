@@ -77,6 +77,7 @@ export default function WorkCard({
           loop
           playsInline
           aria-hidden="true"
+          suppressHydrationWarning
           style={{ objectFit: "cover", objectPosition: "center" }}
         />
       ) : null}
