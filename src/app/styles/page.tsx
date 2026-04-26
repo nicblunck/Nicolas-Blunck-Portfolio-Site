@@ -1,3 +1,5 @@
+import ShowcasePageLayout from "@/components/ShowcasePageLayout";
+
 const serifScale = [
   {
     label: "Display",
@@ -159,32 +161,8 @@ const radiusScale = ["none", "sm", "md", "lg", "xl", "2xl", "full"];
 
 export default function StylesPage() {
   return (
-    <main className="min-h-screen bg-[var(--semantic-bg-base)] px-6 py-12 text-[var(--semantic-text-primary)] md:px-12">
-      <header className="mb-12">
-        <a
-          href="/"
-          className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[var(--semantic-text-tertiary)] transition-colors hover:text-[var(--semantic-text-primary)]"
-        >
-          <span aria-hidden="true">←</span>
-          Back to home
-        </a>
-        <p className="text-sm uppercase tracking-[0.2em] text-[var(--semantic-text-tertiary)]">
-          Design System
-        </p>
-        <h1
-          className="mt-2"
-          style={{
-            fontFamily: "var(--font-instrument-serif)",
-            fontSize: "var(--font-size-h2)",
-            lineHeight: "var(--line-height-h2)",
-            letterSpacing: "var(--tracking-h2-serif)",
-          }}
-        >
-          Styles
-        </h1>
-      </header>
-
-      <section className="mb-16">
+    <ShowcasePageLayout eyebrow="Design System" title="Styles">
+      <section className="-mt-2 mb-16">
         <h2 className="mb-6 text-sm uppercase tracking-[0.2em] text-[var(--semantic-text-tertiary)]">
           Typography
         </h2>
@@ -371,6 +349,6 @@ export default function StylesPage() {
           ))}
         </div>
       </section>
-    </main>
+    </ShowcasePageLayout>
   );
 }

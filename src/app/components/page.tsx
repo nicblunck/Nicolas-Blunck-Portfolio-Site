@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import { useMemo, useState } from "react";
 import NavBar from "@/components/NavBar";
@@ -11,6 +11,7 @@ import CompetenceChip from "@/components/CompetenceChip";
 import ContactForm from "@/components/ContactForm";
 import ContactSection, { type ContactLink } from "@/components/ContactSection";
 import HomeFooter from "@/components/HomeFooter";
+import ShowcasePageLayout from "@/components/ShowcasePageLayout";
 
 export default function ComponentsPage() {
   const [workTitle, setWorkTitle] = useState("Project Title");
@@ -89,40 +90,11 @@ export default function ComponentsPage() {
     );
   };
 
-  return (
-    <main className="min-h-screen bg-[#f3f5f0] px-8 py-16 text-[#192500]">
-      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-12">
-        <header className="flex flex-col gap-4">
-          <a
-            href="/"
-            className="inline-flex items-center gap-2 text-xs uppercase text-[#334d23]"
-            style={{ fontFamily: "var(--font-inter)", letterSpacing: "0.2em" }}
-          >
-            <span aria-hidden="true">←</span>
-            Back to Home
-          </a>
-          <p
-            className="text-xs uppercase"
-            style={{
-              fontFamily: "var(--font-inter)",
-              letterSpacing: "0.2em",
-              color: "#334d23",
-            }}
-          >
-            Components
-          </p>
-          <h1
-            style={{
-              fontFamily: "var(--font-instrument-serif)",
-              fontSize: "3rem",
-              letterSpacing: "-0.02em",
-            }}
-          >
-            UI Components
-          </h1>
-        </header>
+  const sectionClassName = "rounded-xl border border-[var(--semantic-border-default)] bg-[var(--semantic-bg-elevated)]/75 p-8";
 
-        <section className="rounded-xl border border-[#e2eccc] bg-white/60 p-8">
+  return (
+    <ShowcasePageLayout eyebrow="Design System" title="UI Components">
+      <section className={sectionClassName}>
           <div className="flex flex-col gap-6">
             <div>
               <p
@@ -130,7 +102,7 @@ export default function ComponentsPage() {
                 style={{
                   fontFamily: "var(--font-inter)",
                   letterSpacing: "0.2em",
-                  color: "#334d23",
+                  color: "var(--semantic-text-secondary)",
                 }}
               >
                 Navigation
@@ -148,7 +120,7 @@ export default function ComponentsPage() {
           </div>
         </section>
 
-        <section className="rounded-xl border border-[#e2eccc] bg-white/60 p-8">
+        <section className="rounded-xl border border-[var(--semantic-border-default)] bg-[var(--semantic-bg-elevated)]/75 p-8">
           <div className="flex flex-col gap-6">
             <div>
               <p
@@ -156,7 +128,7 @@ export default function ComponentsPage() {
                 style={{
                   fontFamily: "var(--font-inter)",
                   letterSpacing: "0.2em",
-                  color: "#334d23",
+                  color: "var(--semantic-text-secondary)",
                 }}
               >
                 Contact Form
@@ -166,7 +138,7 @@ export default function ComponentsPage() {
           </div>
         </section>
 
-        <section className="rounded-xl border border-[#e2eccc] bg-white/60 p-8">
+        <section className="rounded-xl border border-[var(--semantic-border-default)] bg-[var(--semantic-bg-elevated)]/75 p-8">
           <div className="flex flex-col gap-6">
             <div>
               <p
@@ -174,7 +146,7 @@ export default function ComponentsPage() {
                 style={{
                   fontFamily: "var(--font-inter)",
                   letterSpacing: "0.2em",
-                  color: "#334d23",
+                  color: "var(--semantic-text-secondary)",
                 }}
               >
                 Contact Section
@@ -189,7 +161,7 @@ export default function ComponentsPage() {
           </div>
         </section>
 
-        <section className="rounded-xl border border-[#e2eccc] bg-white/60 p-8">
+        <section className="rounded-xl border border-[var(--semantic-border-default)] bg-[var(--semantic-bg-elevated)]/75 p-8">
           <div className="flex flex-col gap-6">
             <div>
               <p
@@ -197,7 +169,7 @@ export default function ComponentsPage() {
                 style={{
                   fontFamily: "var(--font-inter)",
                   letterSpacing: "0.2em",
-                  color: "#334d23",
+                  color: "var(--semantic-text-secondary)",
                 }}
               >
                 Work Cards
@@ -212,47 +184,47 @@ export default function ComponentsPage() {
                 enabledTags={enabledTags}
                 chipPalette={chipPalette}
               />
-              <p className="text-xs uppercase tracking-[0.2em] text-[#334d23]">
+              <p className="text-xs uppercase tracking-[0.2em] text-[var(--semantic-text-secondary)]">
                 Showing {workAspect}
               </p>
             </div>
-            <div className="mt-2 grid gap-4 rounded-lg border border-[#e2eccc] bg-white/70 p-4">
-              <p className="text-xs uppercase tracking-[0.2em] text-[#334d23]">Work Card Controls</p>
+            <div className="mt-2 grid gap-4 rounded-lg border border-[var(--semantic-border-default)] bg-[var(--semantic-bg-elevated)]/85 p-4">
+              <p className="text-xs uppercase tracking-[0.2em] text-[var(--semantic-text-secondary)]">Work Card Controls</p>
               <div className="grid gap-3 md:grid-cols-3">
-                <label className="flex flex-col gap-1 text-xs uppercase tracking-[0.12em] text-[#334d23]">
+                <label className="flex flex-col gap-1 text-xs uppercase tracking-[0.12em] text-[var(--semantic-text-secondary)]">
                   Title
                   <input
                     value={workTitle}
                     onChange={(event) => setWorkTitle(event.target.value)}
-                    className="rounded-md border border-[#e2eccc] bg-white px-3 py-2 text-sm uppercase tracking-[0.08em] text-[#192500]"
+                    className="rounded-md border border-[var(--semantic-border-default)] bg-[var(--semantic-bg-elevated)] px-3 py-2 text-sm uppercase tracking-[0.08em] text-[var(--semantic-text-primary)]"
                   />
                 </label>
-                <label className="flex flex-col gap-1 text-xs uppercase tracking-[0.12em] text-[#334d23]">
+                <label className="flex flex-col gap-1 text-xs uppercase tracking-[0.12em] text-[var(--semantic-text-secondary)]">
                   Subline
                   <input
                     value={workClient}
                     onChange={(event) => setWorkClient(event.target.value)}
-                    className="rounded-md border border-[#e2eccc] bg-white px-3 py-2 text-sm uppercase tracking-[0.08em] text-[#192500]"
+                    className="rounded-md border border-[var(--semantic-border-default)] bg-[var(--semantic-bg-elevated)] px-3 py-2 text-sm uppercase tracking-[0.08em] text-[var(--semantic-text-primary)]"
                   />
                 </label>
-                <label className="flex flex-col gap-1 text-xs uppercase tracking-[0.12em] text-[#334d23]">
+                <label className="flex flex-col gap-1 text-xs uppercase tracking-[0.12em] text-[var(--semantic-text-secondary)]">
                   Image URL
                   <input
                     value={workImage}
                     onChange={(event) => setWorkImage(event.target.value)}
-                    className="rounded-md border border-[#e2eccc] bg-white px-3 py-2 text-sm text-[#192500]"
+                    className="rounded-md border border-[var(--semantic-border-default)] bg-[var(--semantic-bg-elevated)] px-3 py-2 text-sm text-[var(--semantic-text-primary)]"
                   />
                 </label>
               </div>
               <div className="grid gap-3 md:grid-cols-1">
-                <label className="flex flex-col gap-1 text-xs uppercase tracking-[0.12em] text-[#334d23]">
+                <label className="flex flex-col gap-1 text-xs uppercase tracking-[0.12em] text-[var(--semantic-text-secondary)]">
                   Aspect Ratio
                   <select
                     value={workAspect}
                     onChange={(event) =>
                       setWorkAspect(event.target.value as "9-16" | "3-4" | "1-1" | "3-2")
                     }
-                    className="rounded-md border border-[#e2eccc] bg-white px-3 py-2 text-sm uppercase tracking-[0.08em] text-[#192500]"
+                    className="rounded-md border border-[var(--semantic-border-default)] bg-[var(--semantic-bg-elevated)] px-3 py-2 text-sm uppercase tracking-[0.08em] text-[var(--semantic-text-primary)]"
                   >
                     <option value="9-16">9:16</option>
                     <option value="3-4">3:4</option>
@@ -267,7 +239,7 @@ export default function ComponentsPage() {
                     key={chip.key}
                     className="grid items-center gap-2 md:grid-cols-[auto_1fr_1fr_1fr]"
                   >
-                    <label className="flex items-center gap-2 text-xs uppercase tracking-[0.12em] text-[#334d23]">
+                    <label className="flex items-center gap-2 text-xs uppercase tracking-[0.12em] text-[var(--semantic-text-secondary)]">
                       <input
                         type="checkbox"
                         checked={chip.enabled}
@@ -280,13 +252,13 @@ export default function ComponentsPage() {
                     <input
                       value={chip.label}
                       onChange={(event) => handleChipUpdate(index, { label: event.target.value })}
-                      className="rounded-md border border-[#e2eccc] bg-white px-3 py-2 text-sm text-[#192500]"
+                      className="rounded-md border border-[var(--semantic-border-default)] bg-[var(--semantic-bg-elevated)] px-3 py-2 text-sm text-[var(--semantic-text-primary)]"
                       placeholder="Label"
                     />
                     <input
                       value={chip.emoji}
                       onChange={(event) => handleChipUpdate(index, { emoji: event.target.value })}
-                      className="rounded-md border border-[#e2eccc] bg-white px-3 py-2 text-sm text-[#192500]"
+                      className="rounded-md border border-[var(--semantic-border-default)] bg-[var(--semantic-bg-elevated)] px-3 py-2 text-sm text-[var(--semantic-text-primary)]"
                       placeholder="Emoji"
                     />
                     <div className="flex items-center gap-2">
@@ -296,7 +268,7 @@ export default function ComponentsPage() {
                         onChange={(event) =>
                           handleChipUpdate(index, { color: event.target.value })
                         }
-                        className="h-9 w-12 cursor-pointer rounded-md border border-[#e2eccc] bg-white p-1"
+                        className="h-9 w-12 cursor-pointer rounded-md border border-[var(--semantic-border-default)] bg-[var(--semantic-bg-elevated)] p-1"
                         aria-label={`${chip.label} color`}
                       />
                       <input
@@ -304,7 +276,7 @@ export default function ComponentsPage() {
                         onChange={(event) =>
                           handleChipUpdate(index, { color: event.target.value })
                         }
-                        className="flex-1 rounded-md border border-[#e2eccc] bg-white px-3 py-2 text-sm text-[#192500]"
+                        className="flex-1 rounded-md border border-[var(--semantic-border-default)] bg-[var(--semantic-bg-elevated)] px-3 py-2 text-sm text-[var(--semantic-text-primary)]"
                       />
                     </div>
                   </div>
@@ -314,7 +286,7 @@ export default function ComponentsPage() {
           </div>
         </section>
 
-        <section className="rounded-xl border border-[#e2eccc] bg-white/60 p-8">
+        <section className="rounded-xl border border-[var(--semantic-border-default)] bg-[var(--semantic-bg-elevated)]/75 p-8">
           <div className="flex flex-col gap-6">
             <div>
               <p
@@ -322,7 +294,7 @@ export default function ComponentsPage() {
                 style={{
                   fontFamily: "var(--font-inter)",
                   letterSpacing: "0.2em",
-                  color: "#334d23",
+                  color: "var(--semantic-text-secondary)",
                 }}
               >
                 Work Section
@@ -339,7 +311,7 @@ export default function ComponentsPage() {
           </div>
         </section>
 
-        <section className="rounded-xl border border-[#e2eccc] bg-white/60 p-8">
+        <section className="rounded-xl border border-[var(--semantic-border-default)] bg-[var(--semantic-bg-elevated)]/75 p-8">
           <div className="flex flex-col gap-6">
             <div>
               <p
@@ -347,7 +319,7 @@ export default function ComponentsPage() {
                 style={{
                   fontFamily: "var(--font-inter)",
                   letterSpacing: "0.2em",
-                  color: "#334d23",
+                  color: "var(--semantic-text-secondary)",
                 }}
               >
                 Competence Chip
@@ -366,7 +338,7 @@ export default function ComponentsPage() {
           </div>
         </section>
 
-        <section className="rounded-xl border border-[#e2eccc] bg-white/60 p-8">
+        <section className="rounded-xl border border-[var(--semantic-border-default)] bg-[var(--semantic-bg-elevated)]/75 p-8">
           <div className="flex flex-col gap-6">
             <div>
               <p
@@ -374,7 +346,7 @@ export default function ComponentsPage() {
                 style={{
                   fontFamily: "var(--font-inter)",
                   letterSpacing: "0.2em",
-                  color: "#334d23",
+                  color: "var(--semantic-text-secondary)",
                 }}
               >
                 Toggle
@@ -386,7 +358,7 @@ export default function ComponentsPage() {
           </div>
         </section>
 
-        <section className="rounded-xl border border-[#e2eccc] bg-white/60 p-8">
+        <section className="rounded-xl border border-[var(--semantic-border-default)] bg-[var(--semantic-bg-elevated)]/75 p-8">
           <div className="flex flex-col gap-6">
             <div>
               <p
@@ -394,7 +366,7 @@ export default function ComponentsPage() {
                 style={{
                   fontFamily: "var(--font-inter)",
                   letterSpacing: "0.2em",
-                  color: "#334d23",
+                  color: "var(--semantic-text-secondary)",
                 }}
               >
                 Text Button
@@ -402,12 +374,12 @@ export default function ComponentsPage() {
             </div>
             <div className="flex flex-col gap-3">
               <TextButton text="Lorem Ipsum" />
-              <TextButton text="All Work" className="text-[#334d23] gap-4" />
+              <TextButton text="All Work" className="text-[var(--semantic-text-secondary)] gap-4" />
             </div>
           </div>
         </section>
 
-        <section className="rounded-xl border border-[#e2eccc] bg-white/60 p-8">
+        <section className="rounded-xl border border-[var(--semantic-border-default)] bg-[var(--semantic-bg-elevated)]/75 p-8">
           <div className="flex flex-col gap-6">
             <div>
               <p
@@ -415,7 +387,7 @@ export default function ComponentsPage() {
                 style={{
                   fontFamily: "var(--font-inter)",
                   letterSpacing: "0.2em",
-                  color: "#334d23",
+                  color: "var(--semantic-text-secondary)",
                 }}
               >
                 Nav Button
@@ -423,12 +395,12 @@ export default function ComponentsPage() {
             </div>
             <div className="flex flex-col gap-3">
               <NavButton text="Lorem Ipsum" />
-              <NavButton text="Lorem Ipsum" className="bg-[#e2eccc]" />
+              <NavButton text="Lorem Ipsum" className="bg-[var(--semantic-border-default)]" />
             </div>
           </div>
         </section>
 
-        <section className="rounded-xl border border-[#e2eccc] bg-white/60 p-8">
+        <section className="rounded-xl border border-[var(--semantic-border-default)] bg-[var(--semantic-bg-elevated)]/75 p-8">
           <div className="flex flex-col gap-6">
             <div>
               <p
@@ -436,7 +408,7 @@ export default function ComponentsPage() {
                 style={{
                   fontFamily: "var(--font-inter)",
                   letterSpacing: "0.2em",
-                  color: "#334d23",
+                  color: "var(--semantic-text-secondary)",
                 }}
               >
                 Footer
@@ -445,7 +417,6 @@ export default function ComponentsPage() {
             <HomeFooter className="mt-0" />
           </div>
         </section>
-      </div>
-    </main>
+    </ShowcasePageLayout>
   );
 }
