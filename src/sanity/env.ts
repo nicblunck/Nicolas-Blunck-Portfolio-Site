@@ -6,13 +6,22 @@ const rawProjectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 export const hasSanityEnv = Boolean(rawDataset && rawProjectId);
 
 if (!hasSanityEnv) {
-  const message =
-    "[sanity] Missing NEXT_PUBLIC_SANITY_DATASET or NEXT_PUBLIC_SANITY_PROJECT_ID.";
-  if (process.env.NODE_ENV === "production") {
-    throw new Error(`${message} Refusing to build without a real Sanity project.`);
-  }
-  console.warn(`${message} Using fallback values so dev builds can continue.`);
+  console.warn(
+    "[sanity] Missing NEXT_PUBLIC_SANITY_DATASET or NEXT_PUBLIC_SANITY_PROJECT_ID. " +
+      "Using fallback values so build can continue."
+  );
 }
 
+// Use safe fallbacks so server builds do not fail at import time.
+// Runtime fetches assert via assertSanityEnv() so prod still fails loudly.
 export const dataset = rawDataset ?? "production";
 export const projectId = rawProjectId ?? "placeholder";
+
+export function assertSanityEnv() {
+  if (hasSanityEnv) return;
+  if (process.env.NODE_ENV === "production") {
+    throw new Error(
+      "[sanity] NEXT_PUBLIC_SANITY_DATASET and NEXT_PUBLIC_SANITY_PROJECT_ID must be set in production."
+    );
+  }
+}
