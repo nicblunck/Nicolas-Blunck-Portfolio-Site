@@ -3,67 +3,21 @@ import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { caseBySlugQuery, contactLinksQuery } from "@/sanity/queries";
 import MetricCount from "@/components/MetricCount";
-import ContactSection, { type ContactLink } from "@/components/ContactSection";
+import ContactSection from "@/components/ContactSection";
 import HomeFooter from "@/components/HomeFooter";
 import NavBar from "@/components/NavBar";
-import WorkSection, { type WorkSectionCase } from "@/components/WorkSection";
+import WorkSection from "@/components/WorkSection";
+import type {
+  CompetencyEntry,
+  ContentBlock,
+  ContactLinkEntry,
+  CoverMedia,
+} from "@/sanity/types";
+import type { WorkSectionCase } from "@/components/WorkSection";
 import type { Metadata } from "next";
 
 type PageProps = {
   params: { slug: string } | Promise<{ slug: string }>;
-};
-
-type CompetencyEntry = {
-  _id: string;
-  key?: string;
-  label?: string;
-  emoji?: string;
-  bg?: string;
-};
-
-type MetricEntry = {
-  value?: string;
-  label?: string;
-};
-
-type CoverMedia = {
-  coverType?: "image" | "video" | "link";
-  image?: unknown;
-  videoUrl?: string;
-  link?: string;
-};
-
-type CaseMedia = {
-  _id: string;
-  mediaType?: "image" | "video";
-  alt?: string;
-  image?: unknown;
-  video?: { asset?: { url?: string } };
-};
-
-type MetricsBlock = {
-  _type: "caseMetrics";
-  metrics?: MetricEntry[];
-};
-
-type SectionBlock = {
-  _type: "caseSection";
-  heading?: string;
-  body?: string;
-  gallery?: Array<CaseMedia | null>;
-};
-
-type QuoteBlock = {
-  _type: "caseQuote";
-  text?: string;
-  author?: string;
-  role?: string;
-};
-
-type ContentBlock = MetricsBlock | SectionBlock | QuoteBlock;
-
-type ContactLinkEntry = ContactLink & {
-  _id: string;
 };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -130,7 +84,7 @@ export default async function CasePage({ params }: PageProps) {
   const competencies = (caseEntry?.competencies ?? []).filter((item) => item?.label);
 
   return (
-    <div className={styles.pageWrap}>
+    <div id="main" className={styles.pageWrap}>
       <div className={styles.landingContainer}>
         <div className={styles.coverImage}>
           {coverType === "video" && coverVideo ? (
@@ -154,7 +108,11 @@ export default async function CasePage({ params }: PageProps) {
               suppressHydrationWarning
             />
           ) : coverImageUrl ? (
-            <img className={styles.coverMedia} src={coverImageUrl} alt="" />
+            <img
+              className={styles.coverMedia}
+              src={coverImageUrl}
+              alt={[caseEntry?.title, caseEntry?.client].filter(Boolean).join(" — ")}
+            />
           ) : (
             <div className={styles.coverFallback} />
           )}

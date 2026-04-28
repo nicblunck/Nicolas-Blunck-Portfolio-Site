@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { METRIC_COUNT_DURATION_MS } from "@/constants/animations";
 
 type MetricCountProps = {
   value: string;
@@ -18,7 +19,7 @@ function parseNumericValue(value: string) {
 
 export default function MetricCount({
   value,
-  durationMs = 900,
+  durationMs = METRIC_COUNT_DURATION_MS,
   className,
   style,
 }: MetricCountProps) {

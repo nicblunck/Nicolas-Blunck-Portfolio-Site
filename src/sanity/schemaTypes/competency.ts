@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { slugify } from "@/lib/slug";
 
 export const competency = defineType({
   name: "competency",
@@ -13,15 +14,7 @@ export const competency = defineType({
       options: {
         source: "label",
         maxLength: 64,
-        slugify: (input) =>
-          input
-            .toString()
-            .toLowerCase()
-            .trim()
-            .replace(/&/g, " and ")
-            .replace(/[^a-z0-9\s-]/g, "")
-            .replace(/\s+/g, "-")
-            .replace(/-+/g, "-"),
+        slugify: (input) => slugify(input),
       },
       description: "Auto-generated from the label.",
     }),

@@ -47,43 +47,11 @@ export default function HomeFooter({
     <footer className={cn("mt-16 w-full", className)}>
       <div className="flex w-full flex-col gap-6 md:flex-row md:items-start">
         <div className="flex flex-1 flex-col gap-1">
-          <p
-            style={{
-              fontFamily: "var(--font-inter)",
-              fontSize: "0.75rem",
-              fontWeight: 600,
-              letterSpacing: "-0.02em",
-              lineHeight: 1.25,
-              color: "var(--semantic-text-secondary)",
-            }}
-          >
-            {aboutTitle}
-          </p>
-          <p
-            style={{
-              fontFamily: "var(--font-inter)",
-              fontSize: "0.75rem",
-              letterSpacing: "-0.04em",
-              lineHeight: 1.25,
-              color: "var(--semantic-text-tertiary)",
-            }}
-          >
-            {aboutText}
-          </p>
+          <p className="text-label">{aboutTitle}</p>
+          <p className="text-footer-body">{aboutText}</p>
         </div>
         <div className="flex flex-1 flex-col items-start gap-[2px] md:items-end">
-          <p
-            style={{
-              fontFamily: "var(--font-inter)",
-              fontSize: "0.75rem",
-              fontWeight: 600,
-              letterSpacing: "-0.02em",
-              lineHeight: 1.25,
-              color: "var(--semantic-text-secondary)",
-            }}
-          >
-            {quickLinksTitle}
-          </p>
+          <p className="text-label">{quickLinksTitle}</p>
           <div className="flex flex-col items-start gap-[2px] md:items-end">
             {quickLinks.map((link) => (
               <a key={`${link.label}-${link.href}`} href={link.href}>
@@ -98,31 +66,12 @@ export default function HomeFooter({
       </div>
 
       <div className="mt-6 flex w-full flex-col items-center gap-1 text-center">
-        <p
-          style={{
-            fontFamily: "var(--font-inter)",
-            fontSize: "1.5rem",
-            letterSpacing: "-0.04em",
-            lineHeight: 1.25,
-            color: "var(--semantic-text-tertiary)",
-          }}
-        >
-          {signatureEmoji}
-        </p>
+        <p className="text-body-xl text-[var(--semantic-text-tertiary)]">{signatureEmoji}</p>
         {signatureLines.map((line, index) => (
-          <p
-            key={`${line.text}-${index}`}
-            style={{
-              fontFamily: "var(--font-inter)",
-              fontSize: "0.75rem",
-              letterSpacing: "-0.04em",
-              lineHeight: 1.25,
-              color: "var(--semantic-text-tertiary)",
-            }}
-          >
+          <p key={`${line.text}-${index}`} className="text-footer-body">
             {line.text}
             {line.emphasis ? (
-              <span style={{ fontWeight: 600, color: "var(--semantic-text-secondary)" }}>
+              <span className="font-semibold text-[var(--semantic-text-secondary)]">
                 {line.emphasis}
               </span>
             ) : null}

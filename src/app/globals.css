@@ -307,6 +307,69 @@ body {
   text-size-adjust: 100%;
 }
 
+/* Typography utilities — semantic counterparts to Figma scale */
+.text-label {
+  font-family: var(--font-inter);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  color: var(--semantic-text-secondary);
+}
+
+.text-body-xl {
+  font-family: var(--font-inter);
+  font-size: 1.5rem;
+  letter-spacing: -0.04em;
+  line-height: 1.25;
+  color: var(--semantic-text-primary);
+}
+
+.text-input {
+  font-family: var(--font-inter);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.text-button-md {
+  font-family: var(--font-inter);
+  font-size: 1rem;
+  letter-spacing: -0.04em;
+}
+
+.text-footer-body {
+  font-family: var(--font-inter);
+  font-size: 0.75rem;
+  letter-spacing: -0.04em;
+  line-height: 1.25;
+  color: var(--semantic-text-tertiary);
+}
+
+/* Visually hidden until focused — used for skip-to-content link */
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  margin: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--semantic-bg-elevated);
+  color: var(--semantic-text-primary);
+  font-family: var(--font-inter);
+  font-size: 0.875rem;
+  font-weight: 600;
+  transform: translateY(-200%);
+  transition: transform 150ms ease-out;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+  outline: 2px solid var(--semantic-accent);
+  outline-offset: 2px;
+}
+
 @keyframes word-bounce {
   0% {
     opacity: 0;
