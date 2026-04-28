@@ -3,6 +3,7 @@ import { Instrument_Sans, Instrument_Serif, Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import ScrollSmootherGate from "@/components/ScrollSmootherGate";
+import { Analytics } from '@vercel/analytics/next';
 
 const instrumentSerif = Instrument_Serif({
   variable: "--font-instrument-serif",
@@ -43,6 +44,7 @@ export default function RootLayout({
         </a>
         <ThemeProvider>{children}</ThemeProvider>
         <ScrollSmootherGate />
+        <Analytics />
       </body>
     </html>
   );
