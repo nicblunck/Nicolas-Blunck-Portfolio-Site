@@ -13,6 +13,15 @@ if (!hasSanityEnv) {
 }
 
 // Use safe fallbacks so server builds do not fail at import time.
-// Runtime Sanity fetches are already guarded with catch blocks in pages.
+// Runtime fetches assert via assertSanityEnv() so prod still fails loudly.
 export const dataset = rawDataset ?? "production";
 export const projectId = rawProjectId ?? "placeholder";
+
+export function assertSanityEnv() {
+  if (hasSanityEnv) return;
+  if (process.env.NODE_ENV === "production") {
+    throw new Error(
+      "[sanity] NEXT_PUBLIC_SANITY_DATASET and NEXT_PUBLIC_SANITY_PROJECT_ID must be set in production."
+    );
+  }
+}

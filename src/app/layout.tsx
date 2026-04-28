@@ -39,6 +39,9 @@ export default function RootLayout({
       <body
         className={`${instrumentSerif.variable} ${instrumentSans.variable} ${inter.variable} antialiased`}
       >
+        <a href="#main" className="skip-link">
+          Skip to content
+        </a>
         <ThemeProvider>{children}</ThemeProvider>
         <ScrollSmootherGate />
         <Analytics />

@@ -1,4 +1,7 @@
 import CompetenceChip from "@/components/CompetenceChip";
+import { defaultWorkCardTags, type WorkCardTag } from "@/constants/competencies";
+
+type TagKey = string;
 
 type WorkCardProps = {
   title: string;
@@ -7,7 +10,7 @@ type WorkCardProps = {
   state?: "default" | "hover";
   imageSrc?: string;
   videoSrc?: string;
-  tags?: Array<{ key: TagKey; label: string; emoji: string; bgColor: string }>;
+  tags?: WorkCardTag[];
   enabledTags?: Partial<Record<TagKey, boolean>>;
   chipPalette?: Partial<Record<TagKey, string>>;
   className?: string;
@@ -23,17 +26,6 @@ const aspectClassMap: Record<WorkCardProps["aspect"], string> = {
   "3-2": "aspect-[3/2]",
 };
 
-type TagKey = string;
-
-const defaultTags: Array<{ key: TagKey; label: string; emoji: string; bgColor: string }> = [
-  { key: "art-direction", label: "Art Direction", emoji: "🎨", bgColor: "#d8e2b8" },
-  { key: "ui", label: "UI", emoji: "📱", bgColor: "#ffd4c7" },
-  { key: "ux", label: "UX", emoji: "🧭", bgColor: "#cbebff" },
-  { key: "motion", label: "Motion", emoji: "🏃", bgColor: "#fdcfcf" },
-  { key: "illustration", label: "Illustration", emoji: "🖌", bgColor: "#fedab8" },
-  { key: "branding", label: "Branding", emoji: "🪧", bgColor: "#fdf9c1" },
-];
-
 export default function WorkCard({
   title,
   client,
@@ -48,7 +40,7 @@ export default function WorkCard({
 }: WorkCardProps) {
   const isControlled = state !== "default";
   const isHovered = state === "hover";
-  const allTags = tags ?? defaultTags;
+  const allTags = tags ?? defaultWorkCardTags;
   const visibleTags = enabledTags
     ? allTags.filter((tag) => enabledTags[tag.key] === true)
     : allTags;
@@ -64,8 +56,7 @@ export default function WorkCard({
         <img
           className="pointer-events-none absolute inset-0 h-full w-full object-cover"
           src={imageSrc}
-          alt=""
-          aria-hidden="true"
+          alt={[title, client].filter(Boolean).join(" — ")}
         />
       ) : null}
       {videoSrc ? (
@@ -76,7 +67,7 @@ export default function WorkCard({
           autoPlay
           loop
           playsInline
-          aria-hidden="true"
+          aria-label={[title, client].filter(Boolean).join(" — ")}
           suppressHydrationWarning
           style={{ objectFit: "cover", objectPosition: "center" }}
         />

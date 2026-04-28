@@ -25,18 +25,7 @@ export default function ContactSection({
     <section className={cn("mt-16 w-full", className)}>
       <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
         <div>
-          <p
-            className="mb-4"
-            style={{
-              fontFamily: "var(--font-inter)",
-              fontSize: "1.5rem",
-              lineHeight: 1.25,
-              letterSpacing: "-0.04em",
-              color: "var(--semantic-text-primary)",
-            }}
-          >
-            {title}
-          </p>
+          <p className="text-body-xl mb-4">{title}</p>
           <div className="flex flex-col gap-4">
             {links.map((link, index) => (
               <a

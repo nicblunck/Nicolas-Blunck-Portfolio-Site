@@ -3,7 +3,10 @@ import TextButton from "@/components/TextButton";
 import WorkCard from "@/components/WorkCard";
 import WorkMasonry from "@/components/WorkMasonry";
 import { urlFor } from "@/sanity/lib/image";
+import type { CompetencyEntry, CoverMedia } from "@/sanity/types";
 import { cn } from "@/lib/utils";
+import { slugify } from "@/lib/slug";
+import { HERO_REVEAL_DELAY_MS } from "@/constants/animations";
 
 export type WorkSectionCase = {
   _id: string;
@@ -13,20 +16,7 @@ export type WorkSectionCase = {
   slugValue?: string;
   aspect?: "9-16" | "3-4" | "1-1" | "3-2";
   competencies?: CompetencyEntry[];
-  coverMedia?: {
-    coverType?: "image" | "video" | "link";
-    image?: unknown;
-    videoUrl?: string;
-    link?: string;
-  };
-};
-
-type CompetencyEntry = {
-  _id: string;
-  key?: string;
-  label?: string;
-  emoji?: string;
-  bg?: string;
+  coverMedia?: CoverMedia;
 };
 
 type WorkSectionProps = {
@@ -37,16 +27,6 @@ type WorkSectionProps = {
   animationDelayMs?: number;
   className?: string;
 };
-
-function deriveSlug(input?: string) {
-  if (!input) return "";
-  return input
-    .toLowerCase()
-    .trim()
-    .replace(/['"]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
 
 function resolveImageUrl(image?: unknown) {
   if (!image) return "";
@@ -85,7 +65,7 @@ export default function WorkSection({
   ctaLabel = "All Work",
   ctaUrl = "#",
   cases = [],
-  animationDelayMs = 1300,
+  animationDelayMs = HERO_REVEAL_DELAY_MS,
   className,
 }: WorkSectionProps) {
   const animationDelay = `${animationDelayMs}ms`;
@@ -96,15 +76,7 @@ export default function WorkSection({
         className="animate-fade-in flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
         style={{ animationDelay }}
       >
-        <p
-          style={{
-            fontFamily: "var(--font-inter)",
-            fontSize: "1.5rem",
-            letterSpacing: "-0.04em",
-          }}
-        >
-          {title}
-        </p>
+        <p className="text-body-xl">{title}</p>
         <a href={ctaUrl}>
           <TextButton text={ctaLabel} />
         </a>
@@ -127,7 +99,7 @@ export default function WorkSection({
               }));
 
             const { imageSrc, videoSrc } = resolveCoverMedia(item.coverMedia);
-            const caseSlug = item.slugValue ?? item.slug?.current ?? deriveSlug(item.title ?? "");
+            const caseSlug = item.slugValue ?? item.slug?.current ?? slugify(item.title);
             const workLink = caseSlug ? `/work/${caseSlug}` : undefined;
 
             const card = (

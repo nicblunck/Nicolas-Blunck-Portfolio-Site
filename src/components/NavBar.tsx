@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import NavButton from "@/components/NavButton";
 import Toggle from "@/components/Toggle";
 import { useTheme } from "@/components/ThemeProvider";
@@ -21,6 +22,9 @@ export default function NavBar({
   const themeContext = useTheme();
   const isReady = themeContext?.isReady ?? false;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const isActive = (href: string) =>
+    href !== "#" && (pathname === href || (href !== "/" && pathname?.startsWith(href)));
 
   return (
     <div
@@ -39,6 +43,7 @@ export default function NavBar({
           <a
             key={item.label}
             href={item.href}
+            aria-current={isActive(item.href) ? "page" : undefined}
             onClick={() => setIsMenuOpen(false)}
             className="flex justify-center py-1"
           >
@@ -52,7 +57,11 @@ export default function NavBar({
       <div className="flex h-[52px] w-fit items-center justify-between gap-2 p-3 sm:h-[60px] sm:p-4">
         <div className="hidden items-center sm:flex sm:flex-1 sm:justify-center">
           {items.map((item) => (
-            <a key={item.label} href={item.href}>
+            <a
+              key={item.label}
+              href={item.href}
+              aria-current={isActive(item.href) ? "page" : undefined}
+            >
               <NavButton
                 text={item.label}
                 className={variant === "landing" ? "nav-button--landing" : undefined}

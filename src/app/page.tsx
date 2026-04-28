@@ -3,7 +3,7 @@ import ClientLogoMarquee from "@/components/ClientLogoMarquee";
 import FixedNavObserver from "@/components/FixedNavObserver";
 import CursorGlow from "@/components/CursorGlow";
 import ScrollArrowLottie from "@/components/ScrollArrowLottie";
-import ContactSection, { type ContactLink } from "@/components/ContactSection";
+import ContactSection from "@/components/ContactSection";
 import HomeFooter from "@/components/HomeFooter";
 import WorkSection from "@/components/WorkSection";
 import { client } from "@/sanity/lib/client";
@@ -14,45 +14,20 @@ import {
   contactLinksQuery,
   competenciesQuery,
 } from "@/sanity/queries";
-type CaseEntry = {
-  _id: string;
-  title: string;
-  client?: string;
-  slug?: { current?: string };
-  slugValue?: string;
-  aspect?: "9-16" | "3-4" | "1-1" | "3-2";
-  role?: string;
-  competencies?: CompetencyEntry[];
-  coverMedia?: {
-    coverType?: "image" | "video";
-    image?: unknown;
-    videoUrl?: string;
-    link?: string;
-  };
-};
-
-type ContactLinkEntry = ContactLink & {
-  _id: string;
-};
-
-type ClientLogoEntry = {
-  _id: string;
-  name: string;
-  logo?: {
-    asset?: {
-      url?: string;
-      mimeType?: string | null;
-    };
-  };
-};
-
-type CompetencyEntry = {
-  _id: string;
-  key?: string;
-  label?: string;
-  emoji?: string;
-  bg?: string;
-};
+import type {
+  CaseEntry,
+  ClientLogoEntry,
+  CompetencyEntry,
+  ContactLinkEntry,
+} from "@/sanity/types";
+import { fallbackCompetencies } from "@/constants/competencies";
+import {
+  HERO_REVEAL_DELAY_MS,
+  HERO_WORD_BOUNCE_LINE_1_START_MS,
+  HERO_WORD_BOUNCE_LINE_2_START_MS,
+  HERO_WORD_BOUNCE_STAGGER_MS,
+  SCROLL_ARROW_DELAY_MS,
+} from "@/constants/animations";
 
 export default async function Home() {
   const navItems = [
@@ -85,14 +60,6 @@ export default async function Home() {
   const heroName = "Nic Blunck";
   const introText =
     "Hi there, I'm Nicolas Blunck 👋 I approach design as storytelling, using craft to transform abstract ideas into experiences people can feel. My work is defined by clarity, playfulness, and an ability to translate complex concepts into simple, engaging narratives. Collaboration sits at the center of my process, ensuring every project grows from strong ideas into memorable outcomes.";
-  const fallbackCompetencies: CompetencyEntry[] = [
-    { _id: "fallback-art", key: "art-direction", label: "Art Direction", emoji: "🎨", bg: "#dfe8c2" },
-    { _id: "fallback-ui", key: "ui", label: "UI", emoji: "📱", bg: "#ffd6c9" },
-    { _id: "fallback-ux", key: "ux", label: "UX", emoji: "🧭", bg: "#cfe9ff" },
-    { _id: "fallback-motion", key: "motion", label: "Motion", emoji: "🏃‍♂️", bg: "#ffd0d6" },
-    { _id: "fallback-illustration", key: "illustration", label: "Illustration", emoji: "🖌️", bg: "#ffd9b8" },
-    { _id: "fallback-branding", key: "branding", label: "Branding", emoji: "🪧", bg: "#fff6b8" },
-  ];
   const coreCompetencies =
     (competencies ?? []).filter((item): item is CompetencyEntry => Boolean(item?.label)) ??
     fallbackCompetencies;
@@ -121,7 +88,7 @@ export default async function Home() {
           <div className="w-full">
             <div
               className="animate-fade-in mb-8 flex w-full items-center justify-center gap-2"
-              style={{ animationDelay: "1300ms" }}
+              style={{ animationDelay: `${HERO_REVEAL_DELAY_MS}ms` }}
             >
               <span
                 className="flex items-center justify-center"
@@ -160,7 +127,7 @@ export default async function Home() {
                 key={`${word}-${index}`}
                 className="animate-word-bounce"
                 style={{
-                  animationDelay: `${200 + index * 160}ms`,
+                  animationDelay: `${HERO_WORD_BOUNCE_LINE_1_START_MS + index * HERO_WORD_BOUNCE_STAGGER_MS}ms`,
                   marginRight: index < heroLine1Words.length - 1 ? "0.2em" : undefined,
                 }}
               >
@@ -182,7 +149,7 @@ export default async function Home() {
                 key={`${word}-${index}`}
                 className="animate-word-bounce"
                 style={{
-                  animationDelay: `${760 + index * 160}ms`,
+                  animationDelay: `${HERO_WORD_BOUNCE_LINE_2_START_MS + index * HERO_WORD_BOUNCE_STAGGER_MS}ms`,
                   marginRight: index < heroLine2Words.length - 1 ? "0.2em" : undefined,
                 }}
               >
@@ -194,7 +161,7 @@ export default async function Home() {
           <div
             id="landing-navbar"
             className="animate-fade-in mt-10 flex w-full justify-center"
-            style={{ animationDelay: "1300ms" }}
+            style={{ animationDelay: `${HERO_REVEAL_DELAY_MS}ms` }}
           >
             <NavBar shadow={false} background={false} variant="landing" items={navItems} />
           </div>
@@ -203,11 +170,12 @@ export default async function Home() {
             className="absolute left-1/2 -translate-x-1/2 -translate-y-[175%] rotate-[10deg]"
             style={{ bottom: "calc(24px + env(safe-area-inset-bottom))" }}
           >
-            <ScrollArrowLottie size="clamp(24px, 3vh, 48px)" delayMs={1500} />
+            <ScrollArrowLottie size="clamp(24px, 3vh, 48px)" delayMs={SCROLL_ARROW_DELAY_MS} />
           </div>
         </section>
 
       <main
+        id="main"
         className="mx-auto flex w-full max-w-[1440px] flex-col items-center px-8"
         style={{
           paddingTop: "calc(64px + 36px)",
@@ -215,33 +183,11 @@ export default async function Home() {
         }}
       >
 
-        <section className="animate-fade-in grid w-full grid-cols-12 gap-4" style={{ animationDelay: "1300ms" }}>
-          <p
-            className="col-span-12 md:col-span-9"
-            style={{
-              fontFamily: "var(--font-inter)",
-              fontSize: "1.5rem",
-              lineHeight: 1.25,
-              letterSpacing: "-0.04em",
-              color: "var(--semantic-text-primary)",
-            }}
-          >
-            {introText}
-          </p>
+        <section className="animate-fade-in grid w-full grid-cols-12 gap-4" style={{ animationDelay: `${HERO_REVEAL_DELAY_MS}ms` }}>
+          <p className="text-body-xl col-span-12 md:col-span-9">{introText}</p>
 
           <div className="col-span-12 flex flex-col gap-2 md:col-span-3">
-            <p
-              style={{
-                fontFamily: "var(--font-inter)",
-                fontSize: "0.75rem",
-                letterSpacing: "-0.02em",
-                fontWeight: 600,
-                color: "var(--semantic-text-secondary)",
-                lineHeight: 1.25,
-              }}
-            >
-              Core Competencies
-            </p>
+            <p className="text-label">Core Competencies</p>
             <div className="flex flex-wrap gap-1">
               {resolvedCompetencies.map((item, index) => (
                 <span
@@ -275,21 +221,13 @@ export default async function Home() {
         <section className="mt-16 w-full">
           <div
             className="animate-fade-in flex items-center"
-            style={{ animationDelay: "1300ms" }}
+            style={{ animationDelay: `${HERO_REVEAL_DELAY_MS}ms` }}
           >
-            <p
-              style={{
-                fontFamily: "var(--font-inter)",
-                fontSize: "1.5rem",
-                letterSpacing: "-0.04em",
-              }}
-            >
-              {clientsSectionTitle}
-            </p>
+            <p className="text-body-xl">{clientsSectionTitle}</p>
           </div>
           <div
             className="animate-fade-in relative left-1/2 mt-6 w-screen -translate-x-1/2"
-            style={{ animationDelay: "1300ms" }}
+            style={{ animationDelay: `${HERO_REVEAL_DELAY_MS}ms` }}
           >
             <ClientLogoMarquee logos={marqueeLogos} />
           </div>
