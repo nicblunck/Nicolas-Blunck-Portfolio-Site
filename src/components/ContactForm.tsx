@@ -24,9 +24,9 @@ const defaultFields: FieldConfig[] = [
 ];
 
 const labelClass =
-  "text-input text-[var(--semantic-text-secondary)] leading-[1.25]";
+  "input-text text-[var(--semantic-text-secondary)] leading-[1.25]";
 const inputBaseClass =
-  "rounded-lg bg-[var(--form-input-bg)] px-3 text-[var(--semantic-text-primary)] placeholder:text-[var(--semantic-text-primary)] placeholder:opacity-45 text-input";
+  "rounded-lg bg-[var(--form-input-bg)] px-3 text-[var(--semantic-text-primary)] placeholder:text-[var(--semantic-text-primary)] placeholder:opacity-45 input-text";
 
 export default function ContactForm({
   title = "Get in touch ✉️",

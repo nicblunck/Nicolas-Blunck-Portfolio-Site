@@ -54,14 +54,14 @@ export default function WorkCard({
     >
       {!videoSrc && imageSrc ? (
         <img
-          className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover transition-transform duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.06] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
           src={imageSrc}
           alt={[title, client].filter(Boolean).join(" — ")}
         />
       ) : null}
       {videoSrc ? (
         <video
-          className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover transition-transform duration-[650ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.06] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
           src={videoSrc}
           muted
           autoPlay

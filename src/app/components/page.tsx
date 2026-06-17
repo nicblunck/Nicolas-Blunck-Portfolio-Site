@@ -306,7 +306,6 @@ export default function ComponentsPage() {
               ctaLabel="All Work"
               ctaUrl="#"
               cases={workSectionCases}
-              animationDelayMs={0}
             />
           </div>
         </section>

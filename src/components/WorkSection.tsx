@@ -5,7 +5,7 @@ import WorkMasonry from "@/components/WorkMasonry";
 import type { CaseEntry, CoverMedia } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { slugify } from "@/lib/slug";
-import { HERO_REVEAL_DELAY_MS } from "@/constants/animations";
+import { Reveal } from "@/components/motion/Reveal";
 
 export type WorkSectionCase = CaseEntry;
 
@@ -14,7 +14,6 @@ type WorkSectionProps = {
   ctaLabel?: string;
   ctaUrl?: string;
   cases?: WorkSectionCase[];
-  animationDelayMs?: number;
   className?: string;
 };
 
@@ -40,26 +39,24 @@ export default function WorkSection({
   ctaLabel = "All Work",
   ctaUrl = "#",
   cases = [],
-  animationDelayMs = HERO_REVEAL_DELAY_MS,
   className,
 }: WorkSectionProps) {
-  const animationDelay = `${animationDelayMs}ms`;
+  const showCta = Boolean(ctaLabel && ctaUrl);
+  const showHeader = Boolean(title) || showCta;
 
   return (
     <section className={cn("mt-16 w-full", className)}>
-      <div
-        className="animate-fade-in flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
-        style={{ animationDelay }}
-      >
-        <p className="text-body-xl">{title}</p>
-        <a href={ctaUrl}>
-          <TextButton text={ctaLabel} />
-        </a>
-      </div>
-      <div
-        className="animate-fade-in relative left-1/2 mt-6 w-screen -translate-x-1/2 px-[32px]"
-        style={{ animationDelay }}
-      >
+      {showHeader ? (
+        <Reveal className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          {title ? <p className="text-body-xl">{title}</p> : <span />}
+          {showCta ? (
+            <a href={ctaUrl}>
+              <TextButton text={ctaLabel} />
+            </a>
+          ) : null}
+        </Reveal>
+      ) : null}
+      <div className={cn("relative left-1/2 w-screen -translate-x-1/2 px-4 sm:px-[32px]", showHeader && "mt-6")}>
         <WorkMasonry>
           {cases.map((item) => {
             const cardTags = (item.competencies ?? [])
@@ -83,16 +80,21 @@ export default function WorkSection({
                 imageSrc={imageSrc}
                 videoSrc={videoSrc}
                 tags={cardTags}
-                className="mb-4"
               />
             );
 
-            if (!workLink) return <div key={item.id}>{card}</div>;
-
-            return (
-              <Link key={item.id} href={workLink} className="block">
+            const inner = workLink ? (
+              <Link href={workLink} className="block">
                 {card}
               </Link>
+            ) : (
+              card
+            );
+
+            return (
+              <Reveal key={item.id} className="mb-4" y={28}>
+                {inner}
+              </Reveal>
             );
           })}
         </WorkMasonry>

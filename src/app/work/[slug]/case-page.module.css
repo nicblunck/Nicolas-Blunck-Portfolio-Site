@@ -1,4 +1,5 @@
 .pageWrap {
+  --case-gutter: 32px;
   padding-bottom: 128px;
 }
 
@@ -45,7 +46,7 @@
   gap: 16px;
   column-gap: 16px;
   row-gap: 0;
-  padding: 0 32px;
+  padding: 0 var(--case-gutter);
   height: 100%;
   min-height: 0;
 }
@@ -169,7 +170,7 @@
 .metricsSection {
   width: 100%;
   margin-top: 80px;
-  padding: 0 32px;
+  padding: 0 var(--case-gutter);
   max-width: 1440px;
   margin-left: auto;
   margin-right: auto;
@@ -217,7 +218,7 @@
   max-width: 1440px;
   margin-left: auto;
   margin-right: auto;
-  padding: 0 32px;
+  padding: 0 var(--case-gutter);
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   grid-template-rows: 1fr;
@@ -275,7 +276,7 @@
   width: 100%;
   max-width: 1440px;
   margin: 80px auto 0;
-  padding: 0 32px;
+  padding: 0 var(--case-gutter);
   text-align: center;
 }
 
@@ -306,12 +307,12 @@
   width: 100%;
   max-width: 1440px;
   margin: 80px auto 0;
-  padding: 0 32px;
+  padding: 0 var(--case-gutter);
 }
 
 .caseOutro {
-  margin: 0 -32px;
-  padding: 0 32px;
+  margin: 0 calc(-1 * var(--case-gutter));
+  padding: 0 var(--case-gutter);
   font-family: var(--font-instrument-serif);
   font-size: clamp(6rem, 6vw + 1.5rem, 8rem);
   line-height: 0.95;
@@ -332,6 +333,10 @@
 }
 
 @media (max-width: 768px) {
+  .pageWrap {
+    --case-gutter: 16px;
+  }
+
   .landingContainer {
     height: auto;
     min-height: 650px;
@@ -349,7 +354,7 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    padding: 0 32px;
+    padding: 0 var(--case-gutter);
   }
 
   .infoContainerLeading,
@@ -388,7 +393,7 @@
     grid-template-columns: 1fr;
     grid-template-rows: auto;
     gap: 16px;
-    padding: 0 32px;
+    padding: 0 var(--case-gutter);
   }
 
   .sectionInnerLeading {
@@ -403,12 +408,12 @@
 
   .caseFooterWrap {
     margin-top: 64px;
-    padding: 0 32px;
+    padding: 0 var(--case-gutter);
   }
 
   .caseOutro {
-    margin: 0 -32px;
-    padding: 0 32px;
+    margin: 0 calc(-1 * var(--case-gutter));
+    padding: 0 var(--case-gutter);
   }
 
   .caseNav {

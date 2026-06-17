@@ -1,23 +1,28 @@
 import styles from "./case-page.module.css";
-import { getCaseBySlug } from "@/lib/craft";
+import { getCaseBySlug, getCaseSlugs } from "@/lib/cases";
 import { contactLinks } from "@/constants/contactLinks";
 import MetricCount from "@/components/MetricCount";
 import ContactSection from "@/components/ContactSection";
 import HomeFooter from "@/components/HomeFooter";
 import NavBar from "@/components/NavBar";
 import WorkSection from "@/components/WorkSection";
+import ParallaxCover from "@/components/ParallaxCover";
+import { Reveal } from "@/components/motion/Reveal";
+import { navItems } from "@/constants/navItems";
 import type { Metadata } from "next";
-
-export const revalidate = 600;
 
 type PageProps = {
   params: { slug: string } | Promise<{ slug: string }>;
 };
 
+export function generateStaticParams() {
+  return getCaseSlugs().map((slug) => ({ slug }));
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const resolvedParams = await Promise.resolve(params);
   const slug = resolvedParams.slug ?? "";
-  const caseEntry = await getCaseBySlug(slug);
+  const caseEntry = getCaseBySlug(slug);
   const projectTitle = caseEntry?.title?.trim();
 
   return {
@@ -28,14 +33,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function CasePage({ params }: PageProps) {
   const resolvedParams = await Promise.resolve(params);
   const slug = resolvedParams.slug ?? "";
-  const navItems = [
-    { label: "Work", href: "#" },
-    { label: "Play", href: "#" },
-    { label: "Contact", href: "#" },
-    { label: "Styles", href: "/styles" },
-    { label: "Components", href: "/components" },
-  ];
-  const caseEntry = await getCaseBySlug(slug);
+  const caseEntry = getCaseBySlug(slug);
 
   const blocks = caseEntry?.content ?? [];
   const relatedCases = (caseEntry?.relatedCases ?? []).filter(
@@ -53,21 +51,12 @@ export default async function CasePage({ params }: PageProps) {
     <div id="main" className={styles.pageWrap}>
       <div className={styles.landingContainer}>
         <div className={styles.coverImage}>
-          {coverIsVideo && coverUrl ? (
-            <video
-              className={styles.coverMedia}
-              src={coverUrl}
-              muted
-              autoPlay
-              loop
-              playsInline
-              suppressHydrationWarning
-            />
-          ) : coverImageUrl ? (
-            <img
-              className={styles.coverMedia}
-              src={coverImageUrl}
+          {coverUrl && (coverIsVideo || coverImageUrl) ? (
+            <ParallaxCover
+              isVideo={Boolean(coverIsVideo)}
+              url={coverUrl}
               alt={[caseEntry?.title, caseEntry?.client].filter(Boolean).join(" — ")}
+              mediaClassName={styles.coverMedia}
             />
           ) : (
             <div className={styles.coverFallback} />
@@ -94,9 +83,9 @@ export default async function CasePage({ params }: PageProps) {
           </div>
           <div className={styles.infoContainerTrailing}>
             {caseEntry?.intro ? <p className={styles.infoTrailingText}>{caseEntry.intro}</p> : null}
-            <div className={styles.linkBar}>
-              <p className={styles.linkBarText}>See it live here:</p>
-              {caseEntry?.liveLink ? (
+            {caseEntry?.liveLink ? (
+              <div className={styles.linkBar}>
+                <p className={styles.linkBarText}>See it live here:</p>
                 <a
                   className={styles.linkBarButton}
                   href={caseEntry.liveLink}
@@ -106,8 +95,8 @@ export default async function CasePage({ params }: PageProps) {
                   <span>{caseEntry.liveLinkLabel ?? "Case Website"}</span>
                   <span aria-hidden="true">→</span>
                 </a>
-              ) : null}
-            </div>
+              </div>
+            ) : null}
           </div>
         </div>
       </div>
@@ -117,7 +106,7 @@ export default async function CasePage({ params }: PageProps) {
           const metrics = (block.metrics ?? []).filter((metric) => metric?.value || metric?.label);
           if (!metrics.length) return null;
           return (
-            <section key={`metrics-${blockIndex}`} className={styles.metricsSection}>
+            <Reveal key={`metrics-${blockIndex}`} className={styles.metricsSection}>
               <div
                 className={styles.metricsGrid}
                 style={{ "--metrics-count": metrics.length } as React.CSSProperties}
@@ -129,7 +118,7 @@ export default async function CasePage({ params }: PageProps) {
                   </div>
                 ))}
               </div>
-            </section>
+            </Reveal>
           );
         }
 
@@ -151,9 +140,10 @@ export default async function CasePage({ params }: PageProps) {
                 {galleryItems.map((item, index) => {
                   if (item.type === "video") {
                     return (
-                      <div
+                      <Reveal
                         key={`section-video-${blockIndex}-${index}`}
                         className={styles.sectionMediaItem}
+                        y={32}
                       >
                         <video
                           className={styles.sectionMedia}
@@ -164,17 +154,18 @@ export default async function CasePage({ params }: PageProps) {
                           playsInline
                           suppressHydrationWarning
                         />
-                      </div>
+                      </Reveal>
                     );
                   }
 
                   return (
-                    <div
+                    <Reveal
                       key={`section-image-${blockIndex}-${index}`}
                       className={styles.sectionMediaItem}
+                      y={32}
                     >
                       <img className={styles.sectionMedia} src={item.url} alt={item.alt ?? ""} />
-                    </div>
+                    </Reveal>
                   );
                 })}
               </div>
@@ -185,13 +176,13 @@ export default async function CasePage({ params }: PageProps) {
         if (block.type === "quote") {
           if (!block.text) return null;
           return (
-            <section key={`quote-${blockIndex}`} className={styles.quoteBlock}>
+            <Reveal key={`quote-${blockIndex}`} className={styles.quoteBlock} y={32}>
               <p className={styles.quoteText}>"{block.text}"</p>
               <div className={styles.quoteMeta}>
                 {block.author ? <p>{block.author}</p> : null}
                 {block.role ? <p className={styles.quoteRole}>{block.role}</p> : null}
               </div>
-            </section>
+            </Reveal>
           );
         }
 
@@ -201,10 +192,10 @@ export default async function CasePage({ params }: PageProps) {
       <div className={styles.caseFooterWrap}>
         {relatedCases.length ? (
           <>
-            <div className={styles.caseOutro}>
+            <Reveal className={styles.caseOutro} y={32}>
               <span className={styles.caseOutroAccent}>That's it!</span> Why not check out another
               case?
-            </div>
+            </Reveal>
             <WorkSection
               title="Some of my work 💼"
               ctaLabel="All Work"

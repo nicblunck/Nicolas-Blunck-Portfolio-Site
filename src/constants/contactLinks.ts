@@ -1,6 +1,12 @@
 import type { ContactLinkEntry } from "@/lib/types";
 
-// No contact links are seeded yet — the previous list lived in Sanity and
-// wasn't exported before the dataset was decommissioned. Add real entries
-// here ({ id, label, url, emoji }) when available.
-export const contactLinks: ContactLinkEntry[] = [];
+export const contactLinks: ContactLinkEntry[] = [
+  { id: "email", label: "Email", url: "mailto:nicolasblunck@me.com", emoji: "✉️" },
+  { id: "instagram", label: "Instagram", url: "https://instagram.com/earthlingandco", emoji: "📸" },
+  {
+    id: "bluesky",
+    label: "Bluesky",
+    url: "https://bsky.app/profile/nicolasblunck.com",
+    emoji: "🦋",
+  },
+];

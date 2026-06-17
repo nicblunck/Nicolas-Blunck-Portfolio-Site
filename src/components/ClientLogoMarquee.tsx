@@ -21,16 +21,19 @@ export default function ClientLogoMarquee({
   const repeatedLogos = Array.from({ length: repeatCount }, () => logos).flat();
 
   return (
-    <div className={`relative w-full overflow-hidden ${className ?? ""}`}>
+    <div className={`group relative w-full overflow-hidden ${className ?? ""}`}>
       <style>{`
         @keyframes client-logo-marquee {
           from { transform: translate3d(0, 0, 0); }
           to { transform: translate3d(-50%, 0, 0); }
         }
+        @media (prefers-reduced-motion: reduce) {
+          .client-logo-track { animation: none !important; }
+        }
       `}</style>
 
       <div
-        className="flex w-max will-change-transform"
+        className="client-logo-track flex w-max will-change-transform group-hover:[animation-play-state:paused]"
         style={{ animation: `client-logo-marquee ${duration} linear infinite` }}
       >
         <div className="flex gap-4 pr-4">
@@ -38,7 +41,7 @@ export default function ClientLogoMarquee({
             <div
               // eslint-disable-next-line react/no-array-index-key
               key={`${logo.alt}-${index}`}
-              className="flex h-32 w-32 flex-none items-center justify-center overflow-hidden rounded-[8px] p-4"
+              className="flex h-32 w-32 flex-none items-center justify-center overflow-hidden rounded-[8px] p-4 opacity-70 grayscale transition-all duration-300 ease-out hover:scale-[1.08] hover:opacity-100 hover:grayscale-0 motion-reduce:transition-none"
             >
               {logo.mimeType === "image/svg+xml" ? (
                 <span
@@ -75,7 +78,7 @@ export default function ClientLogoMarquee({
             <div
               // eslint-disable-next-line react/no-array-index-key
               key={`${logo.alt}-duplicate-${index}`}
-              className="flex h-32 w-32 flex-none items-center justify-center overflow-hidden rounded-[8px] p-4"
+              className="flex h-32 w-32 flex-none items-center justify-center overflow-hidden rounded-[8px] p-4 opacity-70 grayscale transition-all duration-300 ease-out hover:scale-[1.08] hover:opacity-100 hover:grayscale-0 motion-reduce:transition-none"
             >
               {logo.mimeType === "image/svg+xml" ? (
                 <span
