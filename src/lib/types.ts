@@ -12,6 +12,8 @@ export type CoverMedia = {
   coverUrl?: string;
 };
 
+export type CaseStatus = "draft" | "published";
+
 export type CaseEntry = {
   id: string;
   title: string;
@@ -20,6 +22,7 @@ export type CaseEntry = {
   aspect?: "9-16" | "3-4" | "1-1" | "3-2";
   role?: string;
   featured?: boolean;
+  status: CaseStatus;
   competencies?: CompetencyEntry[];
   coverMedia?: CoverMedia;
 };

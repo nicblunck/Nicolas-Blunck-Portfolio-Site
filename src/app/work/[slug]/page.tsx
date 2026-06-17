@@ -77,6 +77,23 @@ export default async function CasePage({ params }: PageProps) {
         </div>
         <div className={styles.landingInfoContainer}>
           <div className={styles.infoContainerLeading}>
+            {caseEntry?.status === "draft" ? (
+              <span
+                style={{
+                  alignSelf: "flex-start",
+                  fontFamily: "var(--font-inter)",
+                  fontSize: "0.75rem",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.2em",
+                  color: "var(--semantic-bg-base)",
+                  backgroundColor: "var(--semantic-accent)",
+                  borderRadius: "999px",
+                  padding: "4px 10px",
+                }}
+              >
+                Draft
+              </span>
+            ) : null}
             <p className={styles.infoLeadingTitle}>{caseEntry?.title ?? ""}</p>
             <p className={styles.infoLeadingClient}>{caseEntry?.client ?? ""}</p>
             {competencies.length ? (

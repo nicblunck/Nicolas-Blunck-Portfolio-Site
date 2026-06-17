@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 import { competencyByKey } from "@/constants/competencies";
-import type { CaseDetail, CaseEntry, ContentBlock } from "@/lib/types";
+import type { CaseDetail, CaseEntry, CaseStatus, ContentBlock } from "@/lib/types";
 
 const CASES_ROOT = path.join(process.cwd(), "public", "work");
 const CASE_FILE = "case.md";
@@ -14,6 +14,7 @@ type CaseFrontmatter = {
   aspect?: CaseEntry["aspect"];
   role?: string;
   featured?: boolean;
+  status?: CaseStatus;
   order?: number;
   competencies?: string[];
   coverType?: "image" | "video" | "link";
@@ -49,6 +50,7 @@ function toCaseEntry(folder: string, data: CaseFrontmatter): CaseEntry {
     aspect: data.aspect,
     role: data.role,
     featured: data.featured ?? false,
+    status: data.status === "published" ? "published" : "draft",
     competencies: (data.competencies ?? [])
       .map((key) => competencyByKey(key))
       .filter((entry): entry is NonNullable<typeof entry> => Boolean(entry)),
@@ -85,7 +87,13 @@ export function getCaseSlugs(): string[] {
 
 export function getCases(): CaseEntry[] {
   return getAllCases()
-    .filter((record) => record.entry.featured)
+    .filter((record) => record.entry.featured && record.entry.status === "published")
+    .map((record) => record.entry);
+}
+
+export function getDraftCases(): CaseEntry[] {
+  return getAllCases()
+    .filter((record) => record.entry.status === "draft")
     .map((record) => record.entry);
 }
 
@@ -95,7 +103,12 @@ export function getCaseBySlug(slug: string): CaseDetail | null {
   if (!match) return null;
 
   const relatedCases = records
-    .filter((record) => record.entry.featured && record.entry.id !== match.entry.id)
+    .filter(
+      (record) =>
+        record.entry.featured &&
+        record.entry.status === "published" &&
+        record.entry.id !== match.entry.id
+    )
     .map((record) => record.entry);
 
   return {

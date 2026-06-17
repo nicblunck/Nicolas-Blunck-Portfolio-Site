@@ -56,6 +56,7 @@ export default function ComponentsPage() {
       client: workClient,
       slug: "work-section-1",
       aspect: workAspect,
+      status: "published",
       competencies: chipState
         .filter((chip) => chip.enabled)
         .map((chip) => ({
@@ -72,6 +73,7 @@ export default function ComponentsPage() {
       client: "Another Client",
       slug: "work-section-2",
       aspect: workAspect,
+      status: "published",
       competencies: chipState
         .filter((chip) => chip.enabled)
         .map((chip) => ({
