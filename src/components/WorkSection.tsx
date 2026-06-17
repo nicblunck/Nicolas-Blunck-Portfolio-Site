@@ -2,22 +2,12 @@ import Link from "next/link";
 import TextButton from "@/components/TextButton";
 import WorkCard from "@/components/WorkCard";
 import WorkMasonry from "@/components/WorkMasonry";
-import { urlFor } from "@/sanity/lib/image";
-import type { CompetencyEntry, CoverMedia } from "@/sanity/types";
+import type { CaseEntry, CoverMedia } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { slugify } from "@/lib/slug";
 import { HERO_REVEAL_DELAY_MS } from "@/constants/animations";
 
-export type WorkSectionCase = {
-  _id: string;
-  title?: string;
-  client?: string;
-  slug?: { current?: string };
-  slugValue?: string;
-  aspect?: "9-16" | "3-4" | "1-1" | "3-2";
-  competencies?: CompetencyEntry[];
-  coverMedia?: CoverMedia;
-};
+export type WorkSectionCase = CaseEntry;
 
 type WorkSectionProps = {
   title?: string;
@@ -28,36 +18,21 @@ type WorkSectionProps = {
   className?: string;
 };
 
-function resolveImageUrl(image?: unknown) {
-  if (!image) return "";
-  if (typeof image === "string") return image;
-  return urlFor(image).width(1200).height(1200).url();
-}
-
-function resolveCoverMedia(coverMedia?: WorkSectionCase["coverMedia"]) {
+function resolveCoverMedia(coverMedia?: CoverMedia) {
   const coverType = coverMedia?.coverType ?? "image";
-  const coverImage = coverMedia?.image;
-  const coverVideo = coverMedia?.videoUrl;
-  const coverLink = coverMedia?.link;
-  const linkIsVideo = coverLink
-    ? /\.(mp4|webm|ogg|mov)(\?|#|$)/i.test(coverLink)
-    : false;
-  const linkIsImage = coverLink
-    ? /\.(png|jpe?g|gif|webp|avif|svg)(\?|#|$)/i.test(coverLink)
-    : false;
+  const coverUrl = coverMedia?.coverUrl;
+  if (!coverUrl) return {};
 
   if (coverType === "video") {
-    return { videoSrc: coverVideo };
+    return { videoSrc: coverUrl };
   }
 
-  if (coverType === "link" && coverLink) {
-    if (linkIsVideo) return { videoSrc: coverLink };
-    if (linkIsImage) return { imageSrc: coverLink };
-    if (coverImage) return { imageSrc: resolveImageUrl(coverImage) };
-    return {};
+  if (coverType === "link") {
+    const isVideo = /\.(mp4|webm|ogg|mov)(\?|#|$)/i.test(coverUrl);
+    return isVideo ? { videoSrc: coverUrl } : { imageSrc: coverUrl };
   }
 
-  return { imageSrc: resolveImageUrl(coverImage) };
+  return { imageSrc: coverUrl };
 }
 
 export default function WorkSection({
@@ -88,18 +63,16 @@ export default function WorkSection({
         <WorkMasonry>
           {cases.map((item) => {
             const cardTags = (item.competencies ?? [])
-              .filter((competency): competency is CompetencyEntry =>
-                Boolean(competency?.key && competency?.label)
-              )
+              .filter((competency) => Boolean(competency?.key && competency?.label))
               .map((competency) => ({
-                key: competency.key ?? competency.label ?? "competency",
-                label: competency.label ?? "Competency",
+                key: competency.key,
+                label: competency.label,
                 emoji: competency.emoji ?? "",
                 bgColor: competency.bg ?? "var(--semantic-bg-elevated)",
               }));
 
             const { imageSrc, videoSrc } = resolveCoverMedia(item.coverMedia);
-            const caseSlug = item.slugValue ?? item.slug?.current ?? slugify(item.title);
+            const caseSlug = item.slug || slugify(item.title);
             const workLink = caseSlug ? `/work/${caseSlug}` : undefined;
 
             const card = (
@@ -114,10 +87,10 @@ export default function WorkSection({
               />
             );
 
-            if (!workLink) return <div key={item._id}>{card}</div>;
+            if (!workLink) return <div key={item.id}>{card}</div>;
 
             return (
-              <Link key={item._id} href={workLink} className="block">
+              <Link key={item.id} href={workLink} className="block">
                 {card}
               </Link>
             );

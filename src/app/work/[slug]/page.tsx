@@ -1,20 +1,14 @@
 import styles from "./case-page.module.css";
-import { client } from "@/sanity/lib/client";
-import { urlFor } from "@/sanity/lib/image";
-import { caseBySlugQuery, contactLinksQuery } from "@/sanity/queries";
+import { getCaseBySlug } from "@/lib/craft";
+import { contactLinks } from "@/constants/contactLinks";
 import MetricCount from "@/components/MetricCount";
 import ContactSection from "@/components/ContactSection";
 import HomeFooter from "@/components/HomeFooter";
 import NavBar from "@/components/NavBar";
 import WorkSection from "@/components/WorkSection";
-import type {
-  CompetencyEntry,
-  ContentBlock,
-  ContactLinkEntry,
-  CoverMedia,
-} from "@/sanity/types";
-import type { WorkSectionCase } from "@/components/WorkSection";
 import type { Metadata } from "next";
+
+export const revalidate = 600;
 
 type PageProps = {
   params: { slug: string } | Promise<{ slug: string }>;
@@ -23,9 +17,7 @@ type PageProps = {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const resolvedParams = await Promise.resolve(params);
   const slug = resolvedParams.slug ?? "";
-  const caseEntry = await client
-    .fetch<{ title?: string } | null>(caseBySlugQuery, { slug })
-    .catch(() => null);
+  const caseEntry = await getCaseBySlug(slug);
   const projectTitle = caseEntry?.title?.trim();
 
   return {
@@ -43,64 +35,28 @@ export default async function CasePage({ params }: PageProps) {
     { label: "Styles", href: "/styles" },
     { label: "Components", href: "/components" },
   ];
-  const [caseEntry, contactLinks] = await Promise.all([
-    client
-      .fetch<{
-        _id?: string;
-        title?: string;
-        client?: string;
-        intro?: string;
-        liveLink?: string;
-        liveLinkLabel?: string;
-        competencies?: CompetencyEntry[];
-        coverMedia?: CoverMedia;
-        content?: ContentBlock[];
-        relatedCases?: WorkSectionCase[];
-      } | null>(caseBySlugQuery, { slug })
-      .catch(() => null),
-    client.fetch<ContactLinkEntry[]>(contactLinksQuery).catch(() => []),
-  ]);
+  const caseEntry = await getCaseBySlug(slug);
 
   const blocks = caseEntry?.content ?? [];
   const relatedCases = (caseEntry?.relatedCases ?? []).filter(
-    (item) => item._id !== caseEntry?._id
+    (item) => item.id !== caseEntry?.id
   );
   const coverType = caseEntry?.coverMedia?.coverType ?? "image";
-  const coverImage = caseEntry?.coverMedia?.image;
-  const coverVideo = caseEntry?.coverMedia?.videoUrl;
-  const coverLink = caseEntry?.coverMedia?.link;
-  const coverLinkIsVideo =
-    coverType === "link" && coverLink
-      ? /\.(mp4|webm|ogg|mov)(\?|#|$)/i.test(coverLink)
-      : false;
-  const coverImageUrl =
-    coverType === "image" && coverImage
-      ? urlFor(coverImage).width(2400).height(1500).url()
-      : coverType === "link" && coverLink && !coverLinkIsVideo
-        ? coverLink
-        : coverType === "link" && coverImage
-          ? urlFor(coverImage).width(2400).height(1500).url()
-          : "";
+  const coverUrl = caseEntry?.coverMedia?.coverUrl;
+  const coverIsVideo =
+    coverType === "video" ||
+    (coverType === "link" && coverUrl && /\.(mp4|webm|ogg|mov)(\?|#|$)/i.test(coverUrl));
+  const coverImageUrl = !coverIsVideo ? coverUrl ?? "" : "";
   const competencies = (caseEntry?.competencies ?? []).filter((item) => item?.label);
 
   return (
     <div id="main" className={styles.pageWrap}>
       <div className={styles.landingContainer}>
         <div className={styles.coverImage}>
-          {coverType === "video" && coverVideo ? (
+          {coverIsVideo && coverUrl ? (
             <video
               className={styles.coverMedia}
-              src={coverVideo}
-              muted
-              autoPlay
-              loop
-              playsInline
-              suppressHydrationWarning
-            />
-          ) : coverType === "link" && coverLinkIsVideo && coverLink ? (
-            <video
-              className={styles.coverMedia}
-              src={coverLink}
+              src={coverUrl}
               muted
               autoPlay
               loop
@@ -125,7 +81,7 @@ export default async function CasePage({ params }: PageProps) {
               <div className={styles.infoChips}>
                 {competencies.map((item) => (
                   <span
-                    key={item._id}
+                    key={item.key}
                     className={styles.infoChip}
                     style={{ backgroundColor: item.bg ?? "var(--neutral-0)" }}
                   >
@@ -157,7 +113,7 @@ export default async function CasePage({ params }: PageProps) {
       </div>
 
       {blocks.map((block, blockIndex) => {
-        if (block._type === "caseMetrics") {
+        if (block.type === "metrics") {
           const metrics = (block.metrics ?? []).filter((metric) => metric?.value || metric?.label);
           if (!metrics.length) return null;
           return (
@@ -177,10 +133,8 @@ export default async function CasePage({ params }: PageProps) {
           );
         }
 
-        if (block._type === "caseSection") {
-          const galleryItems = (block.gallery ?? []).filter(
-            (item): item is NonNullable<typeof item> => Boolean(item)
-          );
+        if (block.type === "section") {
+          const galleryItems = block.gallery ?? [];
 
           return (
             <div
@@ -195,16 +149,15 @@ export default async function CasePage({ params }: PageProps) {
               </div>
               <div className={styles.sectionInnerTrailing}>
                 {galleryItems.map((item, index) => {
-                  const videoUrl = item.video?.asset?.url;
-                  if (item.mediaType === "video" && videoUrl) {
+                  if (item.type === "video") {
                     return (
                       <div
-                        key={item._id ?? `section-video-${blockIndex}-${index}`}
+                        key={`section-video-${blockIndex}-${index}`}
                         className={styles.sectionMediaItem}
                       >
                         <video
                           className={styles.sectionMedia}
-                          src={videoUrl}
+                          src={item.url}
                           muted
                           autoPlay
                           loop
@@ -215,17 +168,12 @@ export default async function CasePage({ params }: PageProps) {
                     );
                   }
 
-                  const imageUrl =
-                    item.mediaType === "image" && item.image
-                      ? urlFor(item.image).width(2400).auto("format").url()
-                      : "";
-                  if (!imageUrl) return null;
                   return (
                     <div
-                      key={item._id ?? `section-image-${blockIndex}-${index}`}
+                      key={`section-image-${blockIndex}-${index}`}
                       className={styles.sectionMediaItem}
                     >
-                      <img className={styles.sectionMedia} src={imageUrl} alt={item.alt ?? ""} />
+                      <img className={styles.sectionMedia} src={item.url} alt={item.alt ?? ""} />
                     </div>
                   );
                 })}
@@ -234,7 +182,7 @@ export default async function CasePage({ params }: PageProps) {
           );
         }
 
-        if (block._type === "caseQuote") {
+        if (block.type === "quote") {
           if (!block.text) return null;
           return (
             <section key={`quote-${blockIndex}`} className={styles.quoteBlock}>
@@ -269,7 +217,7 @@ export default async function CasePage({ params }: PageProps) {
         <ContactSection
           className="mt-0"
           links={contactLinks.map((link) => ({
-            id: link._id,
+            id: link.id,
             label: link.label,
             url: link.url,
             emoji: link.emoji,
