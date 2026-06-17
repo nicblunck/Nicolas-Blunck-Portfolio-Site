@@ -6,7 +6,7 @@ import ScrollArrowLottie from "@/components/ScrollArrowLottie";
 import ContactSection from "@/components/ContactSection";
 import HomeFooter from "@/components/HomeFooter";
 import WorkSection from "@/components/WorkSection";
-import { getCases } from "@/lib/craft";
+import { getCases } from "@/lib/cases";
 import { competencies } from "@/constants/competencies";
 import { clientLogos } from "@/constants/clientLogos";
 import { contactLinks } from "@/constants/contactLinks";
@@ -18,9 +18,7 @@ import {
   SCROLL_ARROW_DELAY_MS,
 } from "@/constants/animations";
 
-export const revalidate = 600;
-
-export default async function Home() {
+export default function Home() {
   const navItems = [
     { label: "Work", href: "#" },
     { label: "Play", href: "#" },
@@ -28,7 +26,7 @@ export default async function Home() {
     { label: "Styles", href: "/styles" },
     { label: "Components", href: "/components" },
   ];
-  const cases = await getCases();
+  const cases = getCases();
 
   const heroLine1 = "Shaping stories";
   const heroLine2 = "through digital craft";
