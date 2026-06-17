@@ -51,36 +51,36 @@ export default function ComponentsPage() {
 
   const workSectionCases: WorkSectionCase[] = [
     {
-      _id: "work-section-1",
+      id: "work-section-1",
       title: workTitle,
       client: workClient,
+      slug: "work-section-1",
       aspect: workAspect,
       competencies: chipState
         .filter((chip) => chip.enabled)
         .map((chip) => ({
-          _id: chip.key,
           key: chip.key,
           label: chip.label,
           emoji: chip.emoji,
           bg: chip.color,
         })),
-      coverMedia: { coverType: "image", image: workImage },
+      coverMedia: { coverType: "image", coverUrl: workImage },
     },
     {
-      _id: "work-section-2",
+      id: "work-section-2",
       title: "Another Project",
       client: "Another Client",
+      slug: "work-section-2",
       aspect: workAspect,
       competencies: chipState
         .filter((chip) => chip.enabled)
         .map((chip) => ({
-          _id: `second-${chip.key}`,
           key: chip.key,
           label: chip.label,
           emoji: chip.emoji,
           bg: chip.color,
         })),
-      coverMedia: { coverType: "image", image: workImage },
+      coverMedia: { coverType: "image", coverUrl: workImage },
     },
   ];
 

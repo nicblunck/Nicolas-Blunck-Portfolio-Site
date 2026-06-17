@@ -6,21 +6,10 @@ import ScrollArrowLottie from "@/components/ScrollArrowLottie";
 import ContactSection from "@/components/ContactSection";
 import HomeFooter from "@/components/HomeFooter";
 import WorkSection from "@/components/WorkSection";
-import { client } from "@/sanity/lib/client";
-import { urlFor } from "@/sanity/lib/image";
-import {
-  casesQuery,
-  clientLogosQuery,
-  contactLinksQuery,
-  competenciesQuery,
-} from "@/sanity/queries";
-import type {
-  CaseEntry,
-  ClientLogoEntry,
-  CompetencyEntry,
-  ContactLinkEntry,
-} from "@/sanity/types";
-import { fallbackCompetencies } from "@/constants/competencies";
+import { getCases } from "@/lib/craft";
+import { competencies } from "@/constants/competencies";
+import { clientLogos } from "@/constants/clientLogos";
+import { contactLinks } from "@/constants/contactLinks";
 import {
   HERO_REVEAL_DELAY_MS,
   HERO_WORD_BOUNCE_LINE_1_START_MS,
@@ -28,6 +17,8 @@ import {
   HERO_WORD_BOUNCE_STAGGER_MS,
   SCROLL_ARROW_DELAY_MS,
 } from "@/constants/animations";
+
+export const revalidate = 600;
 
 export default async function Home() {
   const navItems = [
@@ -37,21 +28,7 @@ export default async function Home() {
     { label: "Styles", href: "/styles" },
     { label: "Components", href: "/components" },
   ];
-  let cases: CaseEntry[] = [];
-  let contactLinks: ContactLinkEntry[] = [];
-  let clientLogos: ClientLogoEntry[] = [];
-  let competencies: CompetencyEntry[] = [];
-
-  try {
-    [cases, contactLinks, clientLogos, competencies] = await Promise.all([
-      client.fetch<CaseEntry[]>(casesQuery),
-      client.fetch<ContactLinkEntry[]>(contactLinksQuery),
-      client.fetch<ClientLogoEntry[]>(clientLogosQuery),
-      client.fetch<CompetencyEntry[]>(competenciesQuery),
-    ]);
-  } catch (error) {
-    console.error("Sanity fetch failed:", error);
-  }
+  const cases = await getCases();
 
   const heroLine1 = "Shaping stories";
   const heroLine2 = "through digital craft";
@@ -60,10 +37,7 @@ export default async function Home() {
   const heroName = "Nic Blunck";
   const introText =
     "Hi there, I'm Nicolas Blunck 👋 I approach design as storytelling, using craft to transform abstract ideas into experiences people can feel. My work is defined by clarity, playfulness, and an ability to translate complex concepts into simple, engaging narratives. Collaboration sits at the center of my process, ensuring every project grows from strong ideas into memorable outcomes.";
-  const coreCompetencies =
-    (competencies ?? []).filter((item): item is CompetencyEntry => Boolean(item?.label)) ??
-    fallbackCompetencies;
-  const resolvedCompetencies = coreCompetencies.length ? coreCompetencies : fallbackCompetencies;
+  const resolvedCompetencies = competencies;
   const workSectionTitle = "Some of my work 💼";
   const workSectionCtaLabel = "All Work";
   const workSectionCtaUrl = "#";
@@ -73,10 +47,8 @@ export default async function Home() {
   const marqueeLogos = clientLogos
     .map((logo) => ({
       alt: logo.name,
-      src:
-        logo.logo?.asset?.url ??
-        (logo.logo ? urlFor(logo.logo).width(400).height(400).url() : ""),
-      mimeType: logo.logo?.asset?.mimeType ?? null,
+      src: logo.logoUrl,
+      mimeType: logo.logoMimeType ?? null,
     }))
     .filter((logo) => Boolean(logo.src));
 
@@ -249,7 +221,7 @@ export default async function Home() {
 
         <ContactSection
           links={contactLinks.map((link) => ({
-            id: link._id,
+            id: link.id,
             label: link.label,
             url: link.url,
             emoji: link.emoji,
