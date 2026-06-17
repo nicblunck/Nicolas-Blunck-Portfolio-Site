@@ -53,11 +53,13 @@ export default function Toggle({
           isNight ? "translate-x-5" : "translate-x-0"
         }`}
       >
-        {isNight ? (
-          <Moon size={12} weight="fill" className="text-[var(--olive-400)]" />
-        ) : (
-          <Sun size={12} weight="fill" className="text-[var(--peach-400)]" />
-        )}
+        <span key={isNight ? "night" : "day"} className="toggle-pop inline-flex">
+          {isNight ? (
+            <Moon size={12} weight="fill" className="text-[var(--olive-400)]" />
+          ) : (
+            <Sun size={12} weight="fill" className="text-[var(--peach-400)]" />
+          )}
+        </span>
       </span>
     </div>
   );

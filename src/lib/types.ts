@@ -20,6 +20,7 @@ export type CaseEntry = {
   aspect?: "9-16" | "3-4" | "1-1" | "3-2";
   role?: string;
   featured?: boolean;
+  draft?: boolean;
   competencies?: CompetencyEntry[];
   coverMedia?: CoverMedia;
 };
@@ -62,6 +63,7 @@ export type CaseDetail = CaseEntry & {
   liveLinkLabel?: string;
   content?: ContentBlock[];
   relatedCases?: CaseEntry[];
+  order?: number;
 };
 
 export type ContactLinkEntry = ContactLink & {

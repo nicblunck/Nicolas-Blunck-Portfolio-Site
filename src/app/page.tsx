@@ -6,7 +6,10 @@ import ScrollArrowLottie from "@/components/ScrollArrowLottie";
 import ContactSection from "@/components/ContactSection";
 import HomeFooter from "@/components/HomeFooter";
 import WorkSection from "@/components/WorkSection";
-import { getCases } from "@/lib/craft";
+import { Reveal, Stagger, StaggerItem } from "@/components/motion/Reveal";
+import RevealWords from "@/components/motion/RevealWords";
+import { getCases } from "@/lib/cases";
+import { navItems } from "@/constants/navItems";
 import { competencies } from "@/constants/competencies";
 import { clientLogos } from "@/constants/clientLogos";
 import { contactLinks } from "@/constants/contactLinks";
@@ -18,17 +21,8 @@ import {
   SCROLL_ARROW_DELAY_MS,
 } from "@/constants/animations";
 
-export const revalidate = 600;
-
 export default async function Home() {
-  const navItems = [
-    { label: "Work", href: "#" },
-    { label: "Play", href: "#" },
-    { label: "Contact", href: "#" },
-    { label: "Styles", href: "/styles" },
-    { label: "Components", href: "/components" },
-  ];
-  const cases = await getCases();
+  const cases = getCases();
 
   const heroLine1 = "Shaping stories";
   const heroLine2 = "through digital craft";
@@ -63,7 +57,7 @@ export default async function Home() {
               style={{ animationDelay: `${HERO_REVEAL_DELAY_MS}ms` }}
             >
               <span
-                className="flex items-center justify-center"
+                className="peach-mark flex items-center justify-center"
                 style={{
                   width: "clamp(1.5rem, 2vw, 3rem)",
                   height: "clamp(1.5rem, 2vw, 3rem)",
@@ -132,7 +126,7 @@ export default async function Home() {
 
           <div
             id="landing-navbar"
-            className="animate-fade-in mt-10 flex w-full justify-center"
+            className="animate-fade-in mt-10 hidden w-full justify-center sm:flex"
             style={{ animationDelay: `${HERO_REVEAL_DELAY_MS}ms` }}
           >
             <NavBar shadow={false} background={false} variant="landing" items={navItems} />
@@ -148,38 +142,41 @@ export default async function Home() {
 
       <main
         id="main"
-        className="mx-auto flex w-full max-w-[1440px] flex-col items-center px-8"
+        className="mx-auto flex w-full max-w-[1440px] flex-col items-center px-4 sm:px-8"
         style={{
           paddingTop: "calc(64px + 36px)",
           paddingBottom: "128px",
         }}
       >
 
-        <section className="animate-fade-in grid w-full grid-cols-12 gap-4" style={{ animationDelay: `${HERO_REVEAL_DELAY_MS}ms` }}>
-          <p className="text-body-xl col-span-12 md:col-span-9">{introText}</p>
+        <section className="grid w-full grid-cols-12 gap-4">
+          <Reveal className="col-span-12 md:col-span-9">
+            <p className="text-body-xl">{introText}</p>
+          </Reveal>
 
           <div className="col-span-12 flex flex-col gap-2 md:col-span-3">
             <p className="text-label">Core Competencies</p>
-            <div className="flex flex-wrap gap-1">
+            <Stagger className="flex flex-wrap gap-1" stagger={0.05}>
               {resolvedCompetencies.map((item, index) => (
-                <span
-                  key={`${item.label ?? "competency"}-${index}`}
-                  className="flex items-center gap-2 bg-[var(--semantic-bg-elevated)] text-[var(--olive-900)]"
-                  style={{
-                    fontFamily: "var(--font-inter)",
-                    fontSize: "1rem",
-                    letterSpacing: "-0.04em",
-                    borderRadius: "8px",
-                    padding: "4px 8px",
-                    height: "32px",
-                    backgroundColor: item.bg ?? "var(--semantic-bg-elevated)",
-                  }}
-                >
-                  {item.label}
-                  <span aria-hidden="true">{item.emoji}</span>
-                </span>
+                <StaggerItem key={`${item.label ?? "competency"}-${index}`} y={12}>
+                  <span
+                    className="flex items-center gap-2 bg-[var(--semantic-bg-elevated)] text-[var(--olive-900)] transition-transform duration-200 ease-out hover:scale-[1.07] motion-reduce:transition-none"
+                    style={{
+                      fontFamily: "var(--font-inter)",
+                      fontSize: "1rem",
+                      letterSpacing: "-0.04em",
+                      borderRadius: "8px",
+                      padding: "4px 8px",
+                      height: "32px",
+                      backgroundColor: item.bg ?? "var(--semantic-bg-elevated)",
+                    }}
+                  >
+                    {item.label}
+                    <span aria-hidden="true">{item.emoji}</span>
+                  </span>
+                </StaggerItem>
               ))}
-            </div>
+            </Stagger>
           </div>
         </section>
 
@@ -191,22 +188,17 @@ export default async function Home() {
         />
 
         <section className="mt-16 w-full">
-          <div
-            className="animate-fade-in flex items-center"
-            style={{ animationDelay: `${HERO_REVEAL_DELAY_MS}ms` }}
-          >
+          <Reveal className="flex items-center">
             <p className="text-body-xl">{clientsSectionTitle}</p>
-          </div>
-          <div
-            className="animate-fade-in relative left-1/2 mt-6 w-screen -translate-x-1/2"
-            style={{ animationDelay: `${HERO_REVEAL_DELAY_MS}ms` }}
-          >
+          </Reveal>
+          <div className="relative left-1/2 mt-6 w-screen -translate-x-1/2">
             <ClientLogoMarquee logos={marqueeLogos} />
           </div>
         </section>
 
         <section className="mt-24 w-full">
-          <p
+          <RevealWords
+            text={philosophyLine}
             className="leading-[0.95] max-w-[18ch] sm:max-w-none"
             style={{
               fontFamily: "var(--font-instrument-serif)",
@@ -214,20 +206,20 @@ export default async function Home() {
               letterSpacing: "-0.02em",
               color: "var(--semantic-text-primary)",
             }}
-          >
-            {philosophyLine}
-          </p>
+          />
         </section>
 
-        <ContactSection
-          links={contactLinks.map((link) => ({
-            id: link.id,
-            label: link.label,
-            url: link.url,
-            emoji: link.emoji,
-          }))}
-          formProps={{ idPrefix: "home-contact" }}
-        />
+        <Reveal className="w-full">
+          <ContactSection
+            links={contactLinks.map((link) => ({
+              id: link.id,
+              label: link.label,
+              url: link.url,
+              emoji: link.emoji,
+            }))}
+            formProps={{ idPrefix: "home-contact" }}
+          />
+        </Reveal>
 
         <HomeFooter />
 

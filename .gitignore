@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# raw case-study source material (large originals — only the web-optimized
+# exports in public/work/ are committed and served)
+/public/01 Gustavo Gusto/

@@ -3,6 +3,8 @@ import { Instrument_Sans, Instrument_Serif, Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import ScrollSmootherGate from "@/components/ScrollSmootherGate";
+import ScrollProgress from "@/components/ScrollProgress";
+import EasterEgg from "@/components/EasterEgg";
 import { Analytics } from '@vercel/analytics/next';
 
 const instrumentSerif = Instrument_Serif({
@@ -42,8 +44,10 @@ export default function RootLayout({
         <a href="#main" className="skip-link">
           Skip to content
         </a>
+        <ScrollProgress />
         <ThemeProvider>{children}</ThemeProvider>
         <ScrollSmootherGate />
+        <EasterEgg />
         <Analytics />
       </body>
     </html>
