@@ -1,5 +1,5 @@
 import styles from "./case-page.module.css";
-import { getCaseBySlug } from "@/lib/craft";
+import { getCaseBySlug, getCaseSlugs } from "@/lib/cases";
 import { contactLinks } from "@/constants/contactLinks";
 import MetricCount from "@/components/MetricCount";
 import ContactSection from "@/components/ContactSection";
@@ -8,16 +8,18 @@ import NavBar from "@/components/NavBar";
 import WorkSection from "@/components/WorkSection";
 import type { Metadata } from "next";
 
-export const revalidate = 600;
-
 type PageProps = {
   params: { slug: string } | Promise<{ slug: string }>;
 };
 
+export function generateStaticParams() {
+  return getCaseSlugs().map((slug) => ({ slug }));
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const resolvedParams = await Promise.resolve(params);
   const slug = resolvedParams.slug ?? "";
-  const caseEntry = await getCaseBySlug(slug);
+  const caseEntry = getCaseBySlug(slug);
   const projectTitle = caseEntry?.title?.trim();
 
   return {
@@ -35,7 +37,7 @@ export default async function CasePage({ params }: PageProps) {
     { label: "Styles", href: "/styles" },
     { label: "Components", href: "/components" },
   ];
-  const caseEntry = await getCaseBySlug(slug);
+  const caseEntry = getCaseBySlug(slug);
 
   const blocks = caseEntry?.content ?? [];
   const relatedCases = (caseEntry?.relatedCases ?? []).filter(
@@ -75,6 +77,23 @@ export default async function CasePage({ params }: PageProps) {
         </div>
         <div className={styles.landingInfoContainer}>
           <div className={styles.infoContainerLeading}>
+            {caseEntry?.status === "draft" ? (
+              <span
+                style={{
+                  alignSelf: "flex-start",
+                  fontFamily: "var(--font-inter)",
+                  fontSize: "0.75rem",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.2em",
+                  color: "var(--semantic-bg-base)",
+                  backgroundColor: "var(--semantic-accent)",
+                  borderRadius: "999px",
+                  padding: "4px 10px",
+                }}
+              >
+                Draft
+              </span>
+            ) : null}
             <p className={styles.infoLeadingTitle}>{caseEntry?.title ?? ""}</p>
             <p className={styles.infoLeadingClient}>{caseEntry?.client ?? ""}</p>
             {competencies.length ? (
