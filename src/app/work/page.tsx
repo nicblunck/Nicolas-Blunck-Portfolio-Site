@@ -26,13 +26,26 @@ export default function WorkIndexPage() {
         className="mx-auto flex w-full max-w-[1440px] flex-col items-start px-4 sm:px-8"
         style={{ paddingTop: "80px", paddingBottom: "160px" }}
       >
-        <header className="w-full">
+        <header className="w-full text-center">
+          <div className="mb-6 flex justify-center">
+            <span
+              className="flex items-center gap-2 rounded-full bg-[var(--semantic-bg-elevated)] px-4 py-1.5"
+              style={{
+                fontFamily: "var(--font-instrument-serif)",
+                fontSize: "clamp(1.5rem, 2vw, 3rem)",
+                letterSpacing: "-0.03em",
+              }}
+            >
+              <span aria-hidden="true">🍑</span>
+              Work
+            </span>
+          </div>
           <RevealWords
             as="h1"
             text="Things I've made with care"
             accentColor="var(--semantic-accent)"
             accentFrom={3}
-            className="leading-[0.95]"
+            className="leading-[0.95] text-center"
             style={{
               fontFamily: "var(--font-instrument-serif)",
               fontSize: "clamp(6rem, 6vw + 1.5rem, 8rem)",

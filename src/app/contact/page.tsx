@@ -28,12 +28,25 @@ export default function ContactPage() {
         className="mx-auto flex w-full max-w-[1440px] flex-col items-start px-4 sm:px-8"
         style={{ paddingTop: "128px", paddingBottom: "160px" }}
       >
+        <div className="mb-6 flex w-full justify-center">
+          <span
+            className="flex items-center gap-2 rounded-full bg-[var(--semantic-bg-elevated)] px-4 py-1.5"
+            style={{
+              fontFamily: "var(--font-instrument-serif)",
+              fontSize: "clamp(1.5rem, 2vw, 3rem)",
+              letterSpacing: "-0.03em",
+            }}
+          >
+            <span aria-hidden="true">🍑</span>
+            Contact
+          </span>
+        </div>
         <RevealWords
           as="h1"
           text="Let's make something good together"
           accentColor="var(--semantic-accent)"
           accentFrom={3}
-          className="leading-[0.95]"
+          className="leading-[0.95] w-full text-center"
           style={{
             fontFamily: "var(--font-instrument-serif)",
             fontSize: "clamp(6rem, 6vw + 1.5rem, 8rem)",
